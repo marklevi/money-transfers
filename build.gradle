@@ -14,9 +14,16 @@ repositories {
     mavenCentral()
 }
 
+project.ext {
+    dropwizardVersion = '1.2.0'
+}
+
+
 dependencies {
-    compile group: 'io.dropwizard', name: 'dropwizard-core', version: '1.2.0'
+    compile group: 'io.dropwizard', name: 'dropwizard-core', version: dropwizardVersion
     testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile group: 'io.dropwizard', name: 'dropwizard-testing', version: dropwizardVersion
+
 }
 
 run {
