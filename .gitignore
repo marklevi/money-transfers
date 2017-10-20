@@ -1,0 +1,13 @@
+*.DS_Store
+*.iml
+.idea/
+bin
+dist
+.gradle/
+build/
+
+intelij/
+/out
+*.version
+
+
