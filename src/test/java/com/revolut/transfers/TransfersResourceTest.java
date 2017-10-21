@@ -16,6 +16,7 @@ import static com.revolut.transfers.MoneyTransfersApplication.decorateObjectMapp
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.eclipse.jetty.http.HttpStatus.CREATED_201;
 import static org.eclipse.jetty.http.HttpStatus.NOT_FOUND_404;
+import static org.eclipse.jetty.http.HttpStatus.UNPROCESSABLE_ENTITY_422;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -70,6 +71,19 @@ public class TransfersResourceTest {
 
         assertThat(response.getStatus())
                 .isEqualTo(NOT_FOUND_404);
+
+    }
+
+    @Test
+    public void shouldReturn422WhenAnyRequestsFieldsExceptDescriptionAreBlank() {
+        TransferDetailsRequest transferDetailsRequest = new TransferDetailsRequest("", RECEIVER_ACCOUNT_ID, "", "description");
+        Response response = resources.client()
+                .target("/transfers")
+                .request()
+                .post(Entity.json(transferDetailsRequest));
+
+        assertThat(response.getStatus())
+                .isEqualTo(UNPROCESSABLE_ENTITY_422);
 
     }
 

@@ -7,6 +7,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -32,8 +33,9 @@ public class TransfersResource {
     public Response makeTransfer(@Valid TransferDetailsRequest transferDetailsRequest) {
         String receiverAccountId = transferDetailsRequest.getReceiver();
         String senderAccountId = transferDetailsRequest.getSender();
+        List<String> accountIds = Arrays.asList(receiverAccountId, senderAccountId);
 
-        if (!accountService.accountsExist(Arrays.asList(receiverAccountId, senderAccountId))) {
+        if (!accountService.accountsExist(accountIds)) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         TransferMadeResponse transferMadeResponse = new TransferMadeResponse(UUID.randomUUID().toString());

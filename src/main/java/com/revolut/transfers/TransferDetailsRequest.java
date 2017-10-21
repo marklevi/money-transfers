@@ -13,7 +13,6 @@ public class TransferDetailsRequest {
     @NotBlank
     private String amount;
 
-    @NotBlank
     private String description;
 
     private TransferDetailsRequest() {
