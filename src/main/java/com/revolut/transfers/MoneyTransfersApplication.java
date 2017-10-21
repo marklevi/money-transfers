@@ -28,11 +28,12 @@ public class MoneyTransfersApplication extends Application<MoneyTransfersConfigu
 
     @Override
     public void initialize(Bootstrap<MoneyTransfersConfiguration> bootstrap) {
+        decorateObjectMapper(bootstrap.getObjectMapper());
     }
 
     @Override
     public void run(MoneyTransfersConfiguration configuration, Environment environment) {
-        TransfersResource transfersResource = new TransfersResource();
+        TransfersResource transfersResource = new TransfersResource(new AccountService(new AccountRepo()));
         environment.jersey().register(transfersResource );
     }
 
