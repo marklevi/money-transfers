@@ -2,6 +2,7 @@ package com.revolut.transfers.core;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class AccountRepo {
 
@@ -19,7 +20,7 @@ public class AccountRepo {
         return dataStore.put(account.getAccountId(), account);
     }
 
-    public Account getAccount(String accountId) {
-        return dataStore.get(accountId);
+    public Optional<Account> getAccount(String accountId) {
+        return Optional.ofNullable(dataStore.get(accountId));
     }
 }

@@ -15,6 +15,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.revolut.transfers.MoneyTransfersApplication.decorateObjectMapper;
@@ -45,10 +46,10 @@ public class TransfersResourceTest {
         String transferId = UUID.randomUUID().toString();
 
         Account senderAccount = createAccount(SENDER_ACCOUNT_ID);
-        when(accountService.getAccount(SENDER_ACCOUNT_ID)).thenReturn(senderAccount);
+        when(accountService.getAccount(SENDER_ACCOUNT_ID)).thenReturn(Optional.of(senderAccount));
 
         Account receiverAccount = createAccount(RECEIVER_ACCOUNT_ID);
-        when(accountService.getAccount(RECEIVER_ACCOUNT_ID)).thenReturn(receiverAccount);
+        when(accountService.getAccount(RECEIVER_ACCOUNT_ID)).thenReturn(Optional.of(receiverAccount));
 
         when(transferService.preformTransfer(new Transfer(senderAccount, receiverAccount, new BigDecimal(AMOUNT), DESCRIPTION))).thenReturn(transferId);
 
@@ -71,8 +72,8 @@ public class TransfersResourceTest {
 
     @Test
     public void shouldReturn404WhenAccountDoesNotExist() {
-        when(accountService.getAccount(SENDER_ACCOUNT_ID)).thenReturn(null);
-        when(accountService.getAccount(RECEIVER_ACCOUNT_ID)).thenReturn(null);
+        when(accountService.getAccount(SENDER_ACCOUNT_ID)).thenReturn(Optional.empty());
+        when(accountService.getAccount(RECEIVER_ACCOUNT_ID)).thenReturn(Optional.empty());
 
         TransferRequest transferRequest = new TransferRequest(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID, "200.00", "description");
         Response response = resources.client()

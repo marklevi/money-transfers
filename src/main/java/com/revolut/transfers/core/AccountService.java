@@ -1,6 +1,7 @@
 package com.revolut.transfers.core;
 
 import java.util.List;
+import java.util.Optional;
 
 public class AccountService {
 
@@ -14,7 +15,7 @@ public class AccountService {
         return accountIds.stream().allMatch((id) -> accountRepo.hasAccount(id));
     }
 
-    public Account getAccount(String accountId) {
+    public Optional<Account> getAccount(String accountId) {
         return accountRepo.getAccount(accountId);
     }
 }

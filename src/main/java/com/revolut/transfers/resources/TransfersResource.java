@@ -1,7 +1,7 @@
 package com.revolut.transfers.resources;
 
-import com.revolut.transfers.api.TransferRequest;
 import com.revolut.transfers.api.TransferMadeResponse;
+import com.revolut.transfers.api.TransferRequest;
 import com.revolut.transfers.core.Account;
 import com.revolut.transfers.core.AccountService;
 import com.revolut.transfers.core.Transfer;
@@ -15,8 +15,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Optional;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
@@ -35,18 +34,21 @@ public class TransfersResource {
     @POST
     @Consumes(APPLICATION_JSON)
     public Response makeTransfer(@Valid TransferRequest transferRequest) {
-        Account senderAccount = accountService.getAccount(transferRequest.getSender());
-        Account receiverAccount = accountService.getAccount(transferRequest.getReceiver());
+        Optional<Account> senderAccount = accountService.getAccount(transferRequest.getSender());
+        Optional<Account> receiverAccount = accountService.getAccount(transferRequest.getReceiver());
 
-        if (senderAccount == null || receiverAccount == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
+        if (senderAccount.isPresent() && receiverAccount.isPresent()) {
+            String transferId = transferService.preformTransfer(getTransfer(transferRequest, senderAccount.get(), receiverAccount.get()));
+            TransferMadeResponse transferMadeResponse = new TransferMadeResponse(transferId);
+            return Response.status(Response.Status.CREATED).entity(transferMadeResponse).build();
+
         }
+        return Response.status(Response.Status.NOT_FOUND).build();
+    }
 
+    private Transfer getTransfer(@Valid TransferRequest transferRequest, Account senderAccount, Account receiverAccount) {
         BigDecimal amount = new BigDecimal(transferRequest.getAmount());
         String description = transferRequest.getDescription();
-        String transferId = transferService.preformTransfer(new Transfer(senderAccount, receiverAccount, amount, description));
-        TransferMadeResponse transferMadeResponse = new TransferMadeResponse(transferId);
-        return Response.status(Response.Status.CREATED).entity(transferMadeResponse).build();
-
+        return new Transfer(senderAccount, receiverAccount, amount, description);
     }
 }
