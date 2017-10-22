@@ -5,14 +5,14 @@ import com.revolut.transfers.utils.StructuralEquivalence;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class TransferDetails extends StructuralEquivalence {
+public class Transfer extends StructuralEquivalence {
     private final Account senderAccount;
     private final Account receiverAccount;
     private final BigDecimal amount;
     private final String description;
     private final LocalDate date;
 
-    public TransferDetails(Account senderAccount, Account receiverAccount, BigDecimal amount, String description) {
+    public Transfer(Account senderAccount, Account receiverAccount, BigDecimal amount, String description) {
         this.senderAccount = senderAccount;
         this.receiverAccount = receiverAccount;
         this.amount = amount;

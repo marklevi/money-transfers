@@ -27,10 +27,10 @@ public class TransferRepoTest {
     @Test
     public void addTransferDetailsToRepo() throws Exception {
         TransferRepo transferRepo = new TransferRepo();
-        TransferDetails transferDetails = new TransferDetails(senderAccount, receiverAccount, new BigDecimal("10.00"), FOR_LUNCH);
-        String transferId = transferRepo.addTransferDetails(transferDetails);
+        Transfer transfer = new Transfer(senderAccount, receiverAccount, new BigDecimal("10.00"), FOR_LUNCH);
+        String transferId = transferRepo.addTransfer(transfer);
 
-        assertThat(transferRepo.getTransferDetails(transferId), is(transferDetails));
+        assertThat(transferRepo.getTransfer(transferId), is(transfer));
 
 
     }

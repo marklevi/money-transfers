@@ -2,7 +2,7 @@ package com.revolut.transfers.api;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-public class TransferDetailsRequest {
+public class TransferRequest {
 
     @NotBlank
     private String sender;
@@ -15,11 +15,11 @@ public class TransferDetailsRequest {
 
     private String description;
 
-    private TransferDetailsRequest() {
+    private TransferRequest() {
         /* For Jackson */
     }
 
-    public TransferDetailsRequest(String sender, String receiver, String amount, String description) {
+    public TransferRequest(String sender, String receiver, String amount, String description) {
         this.sender = sender;
         this.receiver = receiver;
         this.amount = amount;

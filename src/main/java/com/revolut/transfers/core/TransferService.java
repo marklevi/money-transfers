@@ -11,16 +11,16 @@ public class TransferService {
         this.transferRepo = transferRepo;
     }
 
-    public String preformTransfer(TransferDetails transferDetails) {
-        Account senderAccount = transferDetails.getSenderAccount();
-        Account receiverAccount = transferDetails.getReceiverAccount();
-        BigDecimal amount = transferDetails.getAmount();
-        LocalDate date = transferDetails.getDate();
+    public String preformTransfer(Transfer transfer) {
+        Account senderAccount = transfer.getSenderAccount();
+        Account receiverAccount = transfer.getReceiverAccount();
+        BigDecimal amount = transfer.getAmount();
+        LocalDate date = transfer.getDate();
 
         addEntryToAccount(senderAccount, amount.negate(), date);
         addEntryToAccount(receiverAccount, amount, date);
 
-        return transferRepo.addTransferDetails(transferDetails);
+        return transferRepo.addTransfer(transfer);
     }
 
     private Entry addEntryToAccount(Account account, BigDecimal amount, LocalDate date){

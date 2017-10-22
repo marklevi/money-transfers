@@ -1,10 +1,11 @@
 package com.revolut.transfers.core;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class AccountRepo {
 
-    private final HashMap<String, Account> dataStore;
+    private final Map<String, Account> dataStore;
 
     public AccountRepo() {
         dataStore = new HashMap<>();

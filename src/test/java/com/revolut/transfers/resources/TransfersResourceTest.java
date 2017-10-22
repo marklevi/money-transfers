@@ -1,11 +1,11 @@
 package com.revolut.transfers.resources;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.revolut.transfers.api.TransferDetailsRequest;
+import com.revolut.transfers.api.TransferRequest;
 import com.revolut.transfers.api.TransferMadeResponse;
 import com.revolut.transfers.core.Account;
 import com.revolut.transfers.core.AccountService;
-import com.revolut.transfers.core.TransferDetails;
+import com.revolut.transfers.core.Transfer;
 import com.revolut.transfers.core.TransferService;
 import io.dropwizard.testing.junit.ResourceTestRule;
 import org.junit.ClassRule;
@@ -51,13 +51,13 @@ public class TransfersResourceTest {
         Account receiverAccount = createAccount(RECEIVER_ACCOUNT_ID);
         when(accountService.getAccount(RECEIVER_ACCOUNT_ID)).thenReturn(receiverAccount);
 
-        when(transferService.preformTransfer(new TransferDetails(senderAccount, receiverAccount, new BigDecimal(AMOUNT), DESCRIPTION))).thenReturn(transferId);
+        when(transferService.preformTransfer(new Transfer(senderAccount, receiverAccount, new BigDecimal(AMOUNT), DESCRIPTION))).thenReturn(transferId);
 
-        TransferDetailsRequest transferDetailsRequest = new TransferDetailsRequest(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID, AMOUNT, DESCRIPTION);
+        TransferRequest transferRequest = new TransferRequest(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID, AMOUNT, DESCRIPTION);
         Response response = resources.client()
                 .target("/transfers")
                 .request()
-                .post(Entity.json(transferDetailsRequest));
+                .post(Entity.json(transferRequest));
 
         assertThat(response.getStatus())
                 .isEqualTo(CREATED_201);
@@ -74,11 +74,11 @@ public class TransfersResourceTest {
     public void shouldReturn404WhenAccountDoesNotExist() {
         when(accountService.hasAccounts(Arrays.asList(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID))).thenReturn(false);
 
-        TransferDetailsRequest transferDetailsRequest = new TransferDetailsRequest(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID, "200.00", "description");
+        TransferRequest transferRequest = new TransferRequest(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID, "200.00", "description");
         Response response = resources.client()
                 .target("/transfers")
                 .request()
-                .post(Entity.json(transferDetailsRequest));
+                .post(Entity.json(transferRequest));
 
         assertThat(response.getStatus())
                 .isEqualTo(NOT_FOUND_404);
@@ -87,11 +87,11 @@ public class TransfersResourceTest {
 
     @Test
     public void shouldReturn422WhenAnyRequestsFieldsExceptDescriptionAreBlank() {
-        TransferDetailsRequest transferDetailsRequest = new TransferDetailsRequest("", RECEIVER_ACCOUNT_ID, "", "description");
+        TransferRequest transferRequest = new TransferRequest("", RECEIVER_ACCOUNT_ID, "", "description");
         Response response = resources.client()
                 .target("/transfers")
                 .request()
-                .post(Entity.json(transferDetailsRequest));
+                .post(Entity.json(transferRequest));
 
         assertThat(response.getStatus())
                 .isEqualTo(UNPROCESSABLE_ENTITY_422);

@@ -36,12 +36,12 @@ public class TransferServiceTest {
 
     @Test
     public void shouldUpdateBalanceOfRespectiveAccounts() throws Exception {
-        TransferDetails transferDetails = new TransferDetails(senderAccount, receiverAccount, new BigDecimal("10.00"), FOR_LUNCH);
+        Transfer transfer = new Transfer(senderAccount, receiverAccount, new BigDecimal("10.00"), FOR_LUNCH);
 
         String expectedTransferId = UUID.randomUUID().toString();
-        when(transferRepo.addTransferDetails(transferDetails)).thenReturn(expectedTransferId);
+        when(transferRepo.addTransfer(transfer)).thenReturn(expectedTransferId);
 
-        String actualTransferId = transferService.preformTransfer(transferDetails);
+        String actualTransferId = transferService.preformTransfer(transfer);
 
         assertThat(actualTransferId, is(expectedTransferId));
 
