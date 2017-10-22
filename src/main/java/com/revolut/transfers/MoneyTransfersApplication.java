@@ -37,7 +37,8 @@ public class MoneyTransfersApplication extends Application<MoneyTransfersConfigu
 
     @Override
     public void run(MoneyTransfersConfiguration configuration, Environment environment) {
-        TransfersResource transfersResource = new TransfersResource(new AccountService(new AccountRepo()), new TransferService());
+        AccountService accountService = new AccountService(new AccountRepo());
+        TransfersResource transfersResource = new TransfersResource(accountService, new TransferService(accountService));
         environment.jersey().register(transfersResource );
     }
 

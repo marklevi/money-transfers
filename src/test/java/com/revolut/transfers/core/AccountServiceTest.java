@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
@@ -27,7 +26,7 @@ public class AccountServiceTest {
         when(accountRepo.hasAccount(SENDER_ACCOUNT_ID)).thenReturn(true);
         when(accountRepo.hasAccount(RECEIVER_ACCOUNT_ID)).thenReturn(true);
 
-        boolean accountsExist = accountService.accountsExist(Arrays.asList(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID));
+        boolean accountsExist = accountService.hasAccounts(Arrays.asList(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID));
         assertTrue(accountsExist);
     }
 
@@ -36,7 +35,7 @@ public class AccountServiceTest {
         when(accountRepo.hasAccount(SENDER_ACCOUNT_ID)).thenReturn(true);
         when(accountRepo.hasAccount(RECEIVER_ACCOUNT_ID)).thenReturn(false);
 
-        boolean accountsExist = accountService.accountsExist(Arrays.asList(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID));
+        boolean accountsExist = accountService.hasAccounts(Arrays.asList(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID));
         assertFalse(accountsExist);
     }
 }

@@ -1,7 +1,6 @@
 package com.revolut.transfers.resources;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableMap;
 import com.revolut.transfers.api.TransferDetailsRequest;
 import com.revolut.transfers.api.TransferMadeResponse;
 import com.revolut.transfers.core.AccountService;
@@ -15,7 +14,6 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
 import java.util.Arrays;
-import java.util.Map;
 import java.util.UUID;
 
 import static com.revolut.transfers.MoneyTransfersApplication.decorateObjectMapper;
@@ -44,7 +42,7 @@ public class TransfersResourceTest {
     @Test
     public void makeTransfer() {
         String transferId = UUID.randomUUID().toString();
-        when(accountService.accountsExist(Arrays.asList(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID))).thenReturn(true);
+        when(accountService.hasAccounts(Arrays.asList(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID))).thenReturn(true);
         when(transferService.makeTransfer(new TransferDetails(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID, new BigDecimal(AMOUNT), DESCRIPTION))).thenReturn(transferId);
 
         TransferDetailsRequest transferDetailsRequest = new TransferDetailsRequest(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID, AMOUNT, DESCRIPTION);
@@ -62,7 +60,7 @@ public class TransfersResourceTest {
 
     @Test
     public void shouldReturn404WhenAccountDoesNotExist() {
-        when(accountService.accountsExist(Arrays.asList(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID))).thenReturn(false);
+        when(accountService.hasAccounts(Arrays.asList(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID))).thenReturn(false);
 
         TransferDetailsRequest transferDetailsRequest = new TransferDetailsRequest(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID, "200.00", "description");
         Response response = resources.client()
