@@ -51,7 +51,7 @@ public class TransfersResourceTest {
         Account receiverAccount = createAccount(RECEIVER_ACCOUNT_ID);
         when(accountService.getAccount(RECEIVER_ACCOUNT_ID)).thenReturn(receiverAccount);
 
-        when(transferService.makeTransfer(new TransferDetails(senderAccount, receiverAccount, new BigDecimal(AMOUNT), DESCRIPTION))).thenReturn(transferId);
+        when(transferService.preformTransfer(new TransferDetails(senderAccount, receiverAccount, new BigDecimal(AMOUNT), DESCRIPTION))).thenReturn(transferId);
 
         TransferDetailsRequest transferDetailsRequest = new TransferDetailsRequest(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID, AMOUNT, DESCRIPTION);
         Response response = resources.client()

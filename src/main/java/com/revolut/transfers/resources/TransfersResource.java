@@ -40,7 +40,7 @@ public class TransfersResource {
         if (!accountService.hasAccounts(accountIds)) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        String transferId = transferService.makeTransfer(getTransferDetails(transferDetailsRequest));
+        String transferId = transferService.preformTransfer(getTransferDetails(transferDetailsRequest));
         TransferMadeResponse transferMadeResponse = new TransferMadeResponse(transferId);
         return Response.status(Response.Status.CREATED).entity(transferMadeResponse).build();
 

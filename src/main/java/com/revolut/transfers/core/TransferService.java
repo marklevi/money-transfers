@@ -11,7 +11,7 @@ public class TransferService {
         this.transferRepo = transferRepo;
     }
 
-    public String makeTransfer(TransferDetails transferDetails) {
+    public String preformTransfer(TransferDetails transferDetails) {
         Account senderAccount = transferDetails.getSenderAccount();
         Account receiverAccount = transferDetails.getReceiverAccount();
         BigDecimal amount = transferDetails.getAmount();
@@ -20,7 +20,7 @@ public class TransferService {
         addEntryToAccount(senderAccount, amount.negate(), date);
         addEntryToAccount(receiverAccount, amount, date);
 
-        return transferRepo.saveRecord(transferDetails);
+        return transferRepo.addTransferDetails(transferDetails);
     }
 
     private Entry addEntryToAccount(Account account, BigDecimal amount, LocalDate date){

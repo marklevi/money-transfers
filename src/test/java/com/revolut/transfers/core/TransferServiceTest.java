@@ -21,7 +21,7 @@ public class TransferServiceTest {
     private static final TransferRepo transferRepo = mock(TransferRepo.class);
     private TransferService transferService;
     private Account senderAccount;
-    private Account receiverAccount ;
+    private Account receiverAccount;
 
     @Before
     public void setUp() throws Exception {
@@ -36,13 +36,12 @@ public class TransferServiceTest {
 
     @Test
     public void shouldUpdateBalanceOfRespectiveAccounts() throws Exception {
-        BigDecimal ten = new BigDecimal("10.00");
-        TransferDetails transferDetails = new TransferDetails(senderAccount, receiverAccount, ten, FOR_LUNCH);
+        TransferDetails transferDetails = new TransferDetails(senderAccount, receiverAccount, new BigDecimal("10.00"), FOR_LUNCH);
 
         String expectedTransferId = UUID.randomUUID().toString();
-        when(transferRepo.saveRecord(transferDetails)).thenReturn(expectedTransferId);
+        when(transferRepo.addTransferDetails(transferDetails)).thenReturn(expectedTransferId);
 
-        String actualTransferId = transferService.makeTransfer(transferDetails);
+        String actualTransferId = transferService.preformTransfer(transferDetails);
 
         assertThat(actualTransferId, is(expectedTransferId));
 
