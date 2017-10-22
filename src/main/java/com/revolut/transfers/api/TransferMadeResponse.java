@@ -1,6 +1,7 @@
-package com.revolut.transfers;
+package com.revolut.transfers.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.revolut.transfers.utils.StructuralEquivalence;
 
 public class TransferMadeResponse extends StructuralEquivalence {
 

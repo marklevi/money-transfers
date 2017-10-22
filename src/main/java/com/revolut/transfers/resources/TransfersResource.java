@@ -1,6 +1,9 @@
-package com.revolut.transfers;
+package com.revolut.transfers.resources;
 
 import com.google.common.collect.ImmutableMap;
+import com.revolut.transfers.core.AccountService;
+import com.revolut.transfers.api.TransferDetailsRequest;
+import com.revolut.transfers.api.TransferMadeResponse;
 
 import javax.validation.Valid;
 import javax.ws.rs.*;

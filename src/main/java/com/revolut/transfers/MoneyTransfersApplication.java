@@ -2,6 +2,9 @@ package com.revolut.transfers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.revolut.transfers.core.AccountRepo;
+import com.revolut.transfers.core.AccountService;
+import com.revolut.transfers.resources.TransfersResource;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;

@@ -1,4 +1,4 @@
-package com.revolut.transfers;
+package com.revolut.transfers.api;
 
 import org.hibernate.validator.constraints.NotBlank;
 

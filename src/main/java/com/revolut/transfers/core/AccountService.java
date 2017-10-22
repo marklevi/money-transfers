@@ -1,4 +1,4 @@
-package com.revolut.transfers;
+package com.revolut.transfers.core;
 
 import java.util.List;
 

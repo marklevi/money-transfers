@@ -1,4 +1,4 @@
-package com.revolut.transfers;
+package com.revolut.transfers.utils;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;

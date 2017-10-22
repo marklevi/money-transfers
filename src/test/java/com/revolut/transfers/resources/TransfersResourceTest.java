@@ -1,9 +1,11 @@
-package com.revolut.transfers;
+package com.revolut.transfers.resources;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
+import com.revolut.transfers.api.TransferDetailsRequest;
+import com.revolut.transfers.api.TransferMadeResponse;
+import com.revolut.transfers.core.AccountService;
 import io.dropwizard.testing.junit.ResourceTestRule;
-import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
 
@@ -14,9 +16,7 @@ import java.util.Map;
 
 import static com.revolut.transfers.MoneyTransfersApplication.decorateObjectMapper;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.eclipse.jetty.http.HttpStatus.CREATED_201;
-import static org.eclipse.jetty.http.HttpStatus.NOT_FOUND_404;
-import static org.eclipse.jetty.http.HttpStatus.UNPROCESSABLE_ENTITY_422;
+import static org.eclipse.jetty.http.HttpStatus.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
