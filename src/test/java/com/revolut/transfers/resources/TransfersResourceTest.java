@@ -5,15 +5,18 @@ import com.google.common.collect.ImmutableMap;
 import com.revolut.transfers.api.TransferDetailsRequest;
 import com.revolut.transfers.api.TransferMadeResponse;
 import com.revolut.transfers.core.AccountService;
+import com.revolut.transfers.core.TransferDetails;
+import com.revolut.transfers.core.TransferService;
 import io.dropwizard.testing.junit.ResourceTestRule;
 import org.junit.ClassRule;
 import org.junit.Test;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
+import java.math.BigDecimal;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static com.revolut.transfers.MoneyTransfersApplication.decorateObjectMapper;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -27,28 +30,33 @@ public class TransfersResourceTest {
     private static final String RECEIVER_ACCOUNT_ID = "receiver-account-id";
 
     private static final AccountService accountService = mock(AccountService.class);
+    private static final TransferService transferService = mock(TransferService.class);
 
 
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
             .setMapper(decorateObjectMapper(new ObjectMapper()))
-            .addResource(new TransfersResource(accountService))
+            .addResource(new TransfersResource(accountService, transferService))
             .build();
+    private static final String AMOUNT = "200.00";
+    private static final String DESCRIPTION = "description";
+
     @Test
     public void getHelloWorld() {
         Map<String, String> expectedResponse = ImmutableMap.of("hello", "world!");
 
-        Map<String, String> actualResponse = resources.client().target("/transfers").request().get(Map.class);
+        Map actualResponse = resources.client().target("/transfers").request().get(Map.class);
         assertThat(actualResponse)
                 .isEqualTo(expectedResponse);
     }
 
     @Test
     public void makeTransfer() {
+        String transferId = UUID.randomUUID().toString();
         when(accountService.accountsExist(Arrays.asList(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID))).thenReturn(true);
+        when(transferService.makeTransfer(new TransferDetails(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID, new BigDecimal(AMOUNT), DESCRIPTION))).thenReturn(transferId);
 
-        TransferDetailsRequest transferDetailsRequest = new TransferDetailsRequest(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID, "200.00", "description");
-
+        TransferDetailsRequest transferDetailsRequest = new TransferDetailsRequest(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID, AMOUNT, DESCRIPTION);
         Response response = resources.client()
                 .target("/transfers")
                 .request()
@@ -58,8 +66,7 @@ public class TransfersResourceTest {
                 .isEqualTo(CREATED_201);
 
         TransferMadeResponse transferMadeResponse = response.readEntity(TransferMadeResponse.class);
-        assertThat(transferMadeResponse)
-                .isInstanceOfAny(TransferMadeResponse.class);
+        assertThat(transferMadeResponse.getTransferId()).isEqualTo(transferId);
     }
 
     @Test
@@ -89,7 +96,4 @@ public class TransfersResourceTest {
                 .isEqualTo(UNPROCESSABLE_ENTITY_422);
 
     }
-
-
-
 }

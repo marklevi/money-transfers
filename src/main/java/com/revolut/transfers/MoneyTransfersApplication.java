@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.revolut.transfers.core.AccountRepo;
 import com.revolut.transfers.core.AccountService;
+import com.revolut.transfers.core.TransferService;
 import com.revolut.transfers.resources.TransfersResource;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
@@ -36,7 +37,7 @@ public class MoneyTransfersApplication extends Application<MoneyTransfersConfigu
 
     @Override
     public void run(MoneyTransfersConfiguration configuration, Environment environment) {
-        TransfersResource transfersResource = new TransfersResource(new AccountService(new AccountRepo()));
+        TransfersResource transfersResource = new TransfersResource(new AccountService(new AccountRepo()), new TransferService());
         environment.jersey().register(transfersResource );
     }
 

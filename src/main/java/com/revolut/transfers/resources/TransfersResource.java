@@ -4,11 +4,14 @@ import com.google.common.collect.ImmutableMap;
 import com.revolut.transfers.core.AccountService;
 import com.revolut.transfers.api.TransferDetailsRequest;
 import com.revolut.transfers.api.TransferMadeResponse;
+import com.revolut.transfers.core.TransferDetails;
+import com.revolut.transfers.core.TransferService;
 
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -21,9 +24,11 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 public class TransfersResource {
 
     private AccountService accountService;
+    private TransferService transferService;
 
-    public TransfersResource(AccountService accountService) {
+    public TransfersResource(AccountService accountService, TransferService transferService) {
         this.accountService = accountService;
+        this.transferService = transferService;
     }
 
     @GET
@@ -41,8 +46,13 @@ public class TransfersResource {
         if (!accountService.accountsExist(accountIds)) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        TransferMadeResponse transferMadeResponse = new TransferMadeResponse(UUID.randomUUID().toString());
+        String transferId = transferService.makeTransfer(getTransferDetails(transferDetailsRequest));
+        TransferMadeResponse transferMadeResponse = new TransferMadeResponse(transferId);
         return Response.status(Response.Status.CREATED).entity(transferMadeResponse).build();
 
+    }
+
+    private TransferDetails getTransferDetails(TransferDetailsRequest transferDetailsRequest) {
+        return new TransferDetails(transferDetailsRequest.getSender(), transferDetailsRequest.getReceiver(), new BigDecimal(transferDetailsRequest.getAmount()), transferDetailsRequest.getDescription());
     }
 }
