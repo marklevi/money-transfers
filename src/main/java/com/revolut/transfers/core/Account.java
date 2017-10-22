@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 public class Account {
     private final String accountId;
-    private final BigDecimal balance;
+    private BigDecimal balance;
     private final boolean allowOverdraft;
 
     public Account(String accountId, BigDecimal balance) {
@@ -19,5 +19,11 @@ public class Account {
 
     public BigDecimal getBalance() {
         return balance;
+    }
+
+    public BigDecimal updateBalance(BigDecimal amount) {
+        BigDecimal newBalance = balance.add(amount);
+        balance = newBalance;
+        return newBalance;
     }
 }

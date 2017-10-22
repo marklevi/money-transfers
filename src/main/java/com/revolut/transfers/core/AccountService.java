@@ -16,6 +16,6 @@ public class AccountService {
     }
 
     public BigDecimal updateBalance(String accountId, BigDecimal amount) {
-        return null;
+        return accountRepo.updateBalance(accountId, amount);
     }
 }
