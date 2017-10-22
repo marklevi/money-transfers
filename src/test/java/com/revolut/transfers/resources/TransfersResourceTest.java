@@ -12,6 +12,7 @@ import org.junit.Test;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import static com.revolut.transfers.MoneyTransfersApplication.decorateObjectMapper;
@@ -23,7 +24,7 @@ import static org.mockito.Mockito.when;
 public class TransfersResourceTest {
 
     private static final String SENDER_ACCOUNT_ID = "sender-account-id";
-    private static final String RECEIVER_ACCOUNT_ID = "receiver-account-d";
+    private static final String RECEIVER_ACCOUNT_ID = "receiver-account-id";
 
     private static final AccountService accountService = mock(AccountService.class);
 
@@ -44,7 +45,9 @@ public class TransfersResourceTest {
 
     @Test
     public void makeTransfer() {
-        TransferDetailsRequest transferDetailsRequest = new TransferDetailsRequest("sender", "receiver", "200.00", "description");
+        when(accountService.accountsExist(Arrays.asList(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID))).thenReturn(true);
+
+        TransferDetailsRequest transferDetailsRequest = new TransferDetailsRequest(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID, "200.00", "description");
 
         Response response = resources.client()
                 .target("/transfers")

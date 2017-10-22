@@ -4,13 +4,13 @@ import java.util.List;
 
 public class AccountService {
 
-    private AccountRepo dataStore;
+    private AccountRepo accountRepo;
 
-    public AccountService(AccountRepo dataStore) {
-        this.dataStore = dataStore;
+    public AccountService(AccountRepo accountRepo) {
+        this.accountRepo = accountRepo;
     }
 
     public boolean accountsExist(List<String> accountIds) {
-        return false;
+        return accountIds.stream().allMatch((id) -> accountRepo.hasAccount(id));
     }
 }

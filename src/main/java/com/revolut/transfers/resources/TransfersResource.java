@@ -36,7 +36,7 @@ public class TransfersResource {
     public Response makeTransfer(@Valid TransferDetailsRequest transferDetailsRequest) {
         String receiverAccountId = transferDetailsRequest.getReceiver();
         String senderAccountId = transferDetailsRequest.getSender();
-        List<String> accountIds = Arrays.asList(receiverAccountId, senderAccountId);
+        List<String> accountIds = Arrays.asList(senderAccountId, receiverAccountId);
 
         if (!accountService.accountsExist(accountIds)) {
             return Response.status(Response.Status.NOT_FOUND).build();
