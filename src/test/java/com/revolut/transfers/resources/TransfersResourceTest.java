@@ -42,15 +42,6 @@ public class TransfersResourceTest {
     private static final String DESCRIPTION = "description";
 
     @Test
-    public void getHelloWorld() {
-        Map<String, String> expectedResponse = ImmutableMap.of("hello", "world!");
-
-        Map actualResponse = resources.client().target("/transfers").request().get(Map.class);
-        assertThat(actualResponse)
-                .isEqualTo(expectedResponse);
-    }
-
-    @Test
     public void makeTransfer() {
         String transferId = UUID.randomUUID().toString();
         when(accountService.accountsExist(Arrays.asList(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID))).thenReturn(true);
