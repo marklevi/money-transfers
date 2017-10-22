@@ -35,29 +35,18 @@ public class TransfersResource {
     @POST
     @Consumes(APPLICATION_JSON)
     public Response makeTransfer(@Valid TransferRequest transferRequest) {
-        List<String> accountIds = getAccountIds(transferRequest);
+        Account senderAccount = accountService.getAccount(transferRequest.getSender());
+        Account receiverAccount = accountService.getAccount(transferRequest.getReceiver());
 
-        if (!accountService.hasAccounts(accountIds)) {
+        if (senderAccount == null || receiverAccount == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        String transferId = transferService.preformTransfer(getTransfer(transferRequest));
+
+        BigDecimal amount = new BigDecimal(transferRequest.getAmount());
+        String description = transferRequest.getDescription();
+        String transferId = transferService.preformTransfer(new Transfer(senderAccount, receiverAccount, amount, description));
         TransferMadeResponse transferMadeResponse = new TransferMadeResponse(transferId);
         return Response.status(Response.Status.CREATED).entity(transferMadeResponse).build();
 
-    }
-
-    private List<String> getAccountIds(@Valid TransferRequest transferRequest) {
-        String receiverAccountId = transferRequest.getReceiver();
-        String senderAccountId = transferRequest.getSender();
-        return Arrays.asList(senderAccountId, receiverAccountId);
-    }
-
-    private Transfer getTransfer(TransferRequest transferRequest) {
-        Account senderAccount = accountService.getAccount(transferRequest.getSender());
-        Account receiverAccount = accountService.getAccount(transferRequest.getReceiver());
-        BigDecimal amount = new BigDecimal(transferRequest.getAmount());
-        String description = transferRequest.getDescription();
-
-        return new Transfer(senderAccount, receiverAccount, amount, description);
     }
 }

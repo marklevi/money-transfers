@@ -43,7 +43,6 @@ public class TransfersResourceTest {
     @Test
     public void makeTransfer() {
         String transferId = UUID.randomUUID().toString();
-        when(accountService.hasAccounts(Arrays.asList(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID))).thenReturn(true);
 
         Account senderAccount = createAccount(SENDER_ACCOUNT_ID);
         when(accountService.getAccount(SENDER_ACCOUNT_ID)).thenReturn(senderAccount);
@@ -72,7 +71,8 @@ public class TransfersResourceTest {
 
     @Test
     public void shouldReturn404WhenAccountDoesNotExist() {
-        when(accountService.hasAccounts(Arrays.asList(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID))).thenReturn(false);
+        when(accountService.getAccount(SENDER_ACCOUNT_ID)).thenReturn(null);
+        when(accountService.getAccount(RECEIVER_ACCOUNT_ID)).thenReturn(null);
 
         TransferRequest transferRequest = new TransferRequest(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID, "200.00", "description");
         Response response = resources.client()
