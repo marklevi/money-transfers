@@ -1,6 +1,5 @@
 package com.revolut.transfers.core;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 
 public class AccountRepo {
@@ -15,17 +14,11 @@ public class AccountRepo {
         return dataStore.containsKey(accountId);
     }
 
-    public Account add(Account account) {
+    public Account addAccount(Account account) {
         return dataStore.put(account.getAccountId(), account);
     }
 
-    public BigDecimal updateBalance(String accountId, BigDecimal amount) {
-        Account account = dataStore.get(accountId);
-        return account.updateBalance(amount);
-    }
-
-    public BigDecimal getBalance(String accountId) {
-        Account account = dataStore.get(accountId);
-        return account.getBalance();
+    public Account getAccount(String accountId) {
+        return dataStore.get(accountId);
     }
 }

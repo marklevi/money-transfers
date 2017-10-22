@@ -1,6 +1,5 @@
 package com.revolut.transfers.core;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public class AccountService {
@@ -15,7 +14,7 @@ public class AccountService {
         return accountIds.stream().allMatch((id) -> accountRepo.hasAccount(id));
     }
 
-    public BigDecimal updateBalance(String accountId, BigDecimal amount) {
-        return accountRepo.updateBalance(accountId, amount);
+    public Account getAccount(String accountId) {
+        return accountRepo.getAccount(accountId);
     }
 }

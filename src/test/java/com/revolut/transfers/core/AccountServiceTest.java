@@ -3,11 +3,10 @@ package com.revolut.transfers.core;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.math.BigDecimal;
 import java.util.Arrays;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -39,16 +38,5 @@ public class AccountServiceTest {
 
         boolean accountsExist = accountService.hasAccounts(Arrays.asList(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID));
         assertFalse(accountsExist);
-    }
-
-    @Test
-    public void shouldReturnRemainingBalanceAfterAnUpdateToBalance() throws Exception {
-        BigDecimal debitAmount = new BigDecimal("20.00");
-        BigDecimal expectedRemainingBalance = new BigDecimal("180.00");
-        when(accountRepo.updateBalance(SENDER_ACCOUNT_ID, debitAmount)).thenReturn(expectedRemainingBalance);
-
-        BigDecimal actualRemainingBalance = accountService.updateBalance(SENDER_ACCOUNT_ID, debitAmount);
-
-        assertThat(actualRemainingBalance, is(expectedRemainingBalance));
     }
 }

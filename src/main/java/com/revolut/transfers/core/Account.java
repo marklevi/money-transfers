@@ -1,15 +1,19 @@
 package com.revolut.transfers.core;
 
-import java.math.BigDecimal;
+import com.revolut.transfers.utils.StructuralEquivalence;
 
-public class Account {
+import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.HashSet;
+
+public class Account extends StructuralEquivalence {
     private final String accountId;
-    private BigDecimal balance;
+    private final Collection<Entry> ledger;
     private final boolean allowOverdraft;
 
-    public Account(String accountId, BigDecimal balance) {
+    public Account(String accountId) {
         this.accountId = accountId;
-        this.balance = balance;
+        this.ledger = new HashSet<>();
         this.allowOverdraft = false;
     }
 
@@ -17,13 +21,20 @@ public class Account {
         return accountId;
     }
 
-    public BigDecimal getBalance() {
-        return balance;
+    public Collection<Entry> getLedger() {
+        return ledger;
     }
 
-    public BigDecimal updateBalance(BigDecimal amount) {
-        BigDecimal newBalance = balance.add(amount);
-        balance = newBalance;
-        return newBalance;
+    public Entry addEntry(Entry entry) {
+        ledger.add(entry);
+        return entry;
+    }
+
+    public BigDecimal getBalance() {
+        return ledger
+                .stream()
+                .map(Entry::getAmount)
+                .reduce(BigDecimal::add)
+                .orElse(BigDecimal.ZERO);
     }
 }

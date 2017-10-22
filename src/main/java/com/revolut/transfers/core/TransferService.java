@@ -1,22 +1,30 @@
 package com.revolut.transfers.core;
 
 import java.math.BigDecimal;
-import java.util.UUID;
+import java.time.LocalDate;
 
 public class TransferService {
-    private AccountService accountService;
 
-    public TransferService(AccountService accountService) {
-        this.accountService = accountService;
+    private TransferRepo transferRepo;
+
+    public TransferService(TransferRepo transferRepo) {
+        this.transferRepo = transferRepo;
     }
 
     public String makeTransfer(TransferDetails transferDetails) {
-        String senderAccountId = transferDetails.getSenderAccountId();
-        String receiverAccountId = transferDetails.getReceiverAccountId();
+        Account senderAccount = transferDetails.getSenderAccount();
+        Account receiverAccount = transferDetails.getReceiverAccount();
         BigDecimal amount = transferDetails.getAmount();
+        LocalDate date = transferDetails.getDate();
 
-        accountService.updateBalance(senderAccountId, amount.negate());
-        accountService.updateBalance(receiverAccountId, amount);
-        return UUID.randomUUID().toString();
+        addEntryToAccount(senderAccount, amount.negate(), date);
+        addEntryToAccount(receiverAccount, amount, date);
+
+        return transferRepo.saveRecord(transferDetails);
+    }
+
+    private Entry addEntryToAccount(Account account, BigDecimal amount, LocalDate date){
+        Entry entry = new Entry(amount, date);
+        return account.addEntry(entry);
     }
 }

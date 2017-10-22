@@ -3,26 +3,29 @@ package com.revolut.transfers.core;
 import com.revolut.transfers.utils.StructuralEquivalence;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 public class TransferDetails extends StructuralEquivalence {
-    private final String senderAccountId;
-    private final String receiverAccountId;
+    private final Account senderAccount;
+    private final Account receiverAccount;
     private final BigDecimal amount;
     private final String description;
+    private final LocalDate date;
 
-    public TransferDetails(String senderAccountId, String receiverAccountId, BigDecimal amount, String description) {
-        this.senderAccountId = senderAccountId;
-        this.receiverAccountId = receiverAccountId;
+    public TransferDetails(Account senderAccount, Account receiverAccount, BigDecimal amount, String description) {
+        this.senderAccount = senderAccount;
+        this.receiverAccount = receiverAccount;
         this.amount = amount;
         this.description = description;
+        this.date = LocalDate.now();
     }
 
-    public String getSenderAccountId() {
-        return senderAccountId;
+    public Account getSenderAccount() {
+        return senderAccount;
     }
 
-    public String getReceiverAccountId() {
-        return receiverAccountId;
+    public Account getReceiverAccount() {
+        return receiverAccount;
     }
 
     public BigDecimal getAmount() {
@@ -31,5 +34,9 @@ public class TransferDetails extends StructuralEquivalence {
 
     public String getDescription() {
         return description;
+    }
+
+    public LocalDate getDate() {
+        return date;
     }
 }

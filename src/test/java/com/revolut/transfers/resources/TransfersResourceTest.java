@@ -3,6 +3,7 @@ package com.revolut.transfers.resources;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revolut.transfers.api.TransferDetailsRequest;
 import com.revolut.transfers.api.TransferMadeResponse;
+import com.revolut.transfers.core.Account;
 import com.revolut.transfers.core.AccountService;
 import com.revolut.transfers.core.TransferDetails;
 import com.revolut.transfers.core.TransferService;
@@ -43,7 +44,14 @@ public class TransfersResourceTest {
     public void makeTransfer() {
         String transferId = UUID.randomUUID().toString();
         when(accountService.hasAccounts(Arrays.asList(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID))).thenReturn(true);
-        when(transferService.makeTransfer(new TransferDetails(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID, new BigDecimal(AMOUNT), DESCRIPTION))).thenReturn(transferId);
+
+        Account senderAccount = createAccount(SENDER_ACCOUNT_ID);
+        when(accountService.getAccount(SENDER_ACCOUNT_ID)).thenReturn(senderAccount);
+
+        Account receiverAccount = createAccount(RECEIVER_ACCOUNT_ID);
+        when(accountService.getAccount(RECEIVER_ACCOUNT_ID)).thenReturn(receiverAccount);
+
+        when(transferService.makeTransfer(new TransferDetails(senderAccount, receiverAccount, new BigDecimal(AMOUNT), DESCRIPTION))).thenReturn(transferId);
 
         TransferDetailsRequest transferDetailsRequest = new TransferDetailsRequest(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID, AMOUNT, DESCRIPTION);
         Response response = resources.client()
@@ -56,6 +64,10 @@ public class TransfersResourceTest {
 
         TransferMadeResponse transferMadeResponse = response.readEntity(TransferMadeResponse.class);
         assertThat(transferMadeResponse.getTransferId()).isEqualTo(transferId);
+    }
+
+    private Account createAccount(String senderAccountId) {
+        return new Account(senderAccountId);
     }
 
     @Test
