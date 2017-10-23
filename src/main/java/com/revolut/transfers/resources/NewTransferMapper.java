@@ -19,6 +19,11 @@ public class NewTransferMapper {
     public NewTransfer mapFrom(TransferRequest transferRequest) {
         Optional<Account> senderAccount = accountService.getAccount(transferRequest.getSender());
         Optional<Account> receiverAccount = accountService.getAccount(transferRequest.getReceiver());
+
+        if (!senderAccount.isPresent() || !receiverAccount.isPresent()) {
+            throw new AccountDoesNotExistException();
+        }
+
         BigDecimal amount = new BigDecimal(transferRequest.getAmount());
         String description = transferRequest.getDescription();
         return new NewTransfer(senderAccount.get(), receiverAccount.get(), amount, description);

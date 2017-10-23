@@ -41,4 +41,18 @@ public class NewTransferMapperTest {
         assertThat(newTransfer.getSenderAccount(), is(senderAccount));
         assertThat(newTransfer.getReceiverAccount(), is(receiverAccount));
     }
+
+    @Test(expected = AccountDoesNotExistException.class)
+    public void shouldThrowAccountNotFoundExceptionWhenAccountDoesNotExist() throws Exception {
+        Account senderAccount = new Account(SENDER_ACCOUNT_ID, new BigDecimal("0.00"));
+
+        when(accountService.getAccount(SENDER_ACCOUNT_ID)).thenReturn(Optional.of(senderAccount));
+        when(accountService.getAccount(RECEIVER_ACCOUNT_ID)).thenReturn(Optional.empty());
+
+        NewTransferMapper newTransferMapper = new NewTransferMapper(accountService);
+        TransferRequest transferRequest = new TransferRequest(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID, AMOUNT, DESCRIPTION);
+
+        newTransferMapper.mapFrom(transferRequest);
+
+    }
 }

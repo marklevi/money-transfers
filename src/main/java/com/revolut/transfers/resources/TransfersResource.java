@@ -31,7 +31,6 @@ public class TransfersResource {
     @Consumes(APPLICATION_JSON)
     public Response makeTransfer(@Valid TransferRequest transferRequest) {
         NewTransfer newTransfer = newTransferMapper.mapFrom(transferRequest);
-
         String transferId = transferService.transfer(newTransfer);
         TransferMadeResponse transferMadeResponse = new TransferMadeResponse(transferId);
         return Response.status(Response.Status.CREATED).entity(transferMadeResponse).build();
