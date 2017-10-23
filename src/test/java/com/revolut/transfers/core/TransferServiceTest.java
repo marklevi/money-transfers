@@ -3,7 +3,6 @@ package com.revolut.transfers.core;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.naming.InsufficientResourcesException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -36,12 +35,12 @@ public class TransferServiceTest {
         Account receiverAccount = new Account(RECEIVER_ACCOUNT_ID, new BigDecimal("0.00"));
         receiverAccount.addEntry(new Entry(new BigDecimal("100.00"), LocalDate.now()));
 
-        Transfer transfer = new Transfer(senderAccount, receiverAccount, new BigDecimal("10.00"), FOR_LUNCH);
+        NewTransfer newTransfer = new NewTransfer(senderAccount, receiverAccount, new BigDecimal("10.00"), FOR_LUNCH);
 
         String expectedTransferId = UUID.randomUUID().toString();
-        when(transferRepo.addTransfer(transfer)).thenReturn(expectedTransferId);
+        when(transferRepo.addTransfer(newTransfer)).thenReturn(expectedTransferId);
 
-        String actualTransferId = transferService.transfer(transfer);
+        String actualTransferId = transferService.transfer(newTransfer);
 
         assertThat(actualTransferId, is(expectedTransferId));
 
@@ -57,12 +56,12 @@ public class TransferServiceTest {
         Account receiverAccount = new Account(RECEIVER_ACCOUNT_ID, new BigDecimal("0.00"));
         receiverAccount.addEntry(new Entry(new BigDecimal("100.00"), LocalDate.now()));
 
-        Transfer transfer = new Transfer(senderAccount, receiverAccount, new BigDecimal("20.00"), FOR_LUNCH);
+        NewTransfer newTransfer = new NewTransfer(senderAccount, receiverAccount, new BigDecimal("20.00"), FOR_LUNCH);
 
         String expectedTransferId = UUID.randomUUID().toString();
-        when(transferRepo.addTransfer(transfer)).thenReturn(expectedTransferId);
+        when(transferRepo.addTransfer(newTransfer)).thenReturn(expectedTransferId);
 
-        String actualTransferId = transferService.transfer(transfer);
+        String actualTransferId = transferService.transfer(newTransfer);
 
         assertThat(actualTransferId, is(expectedTransferId));
 
@@ -83,10 +82,10 @@ public class TransferServiceTest {
         receiverAccount.addEntry(new Entry(receiverBalance, LocalDate.now()));
 
         BigDecimal amount = new BigDecimal("40.00");
-        Transfer transfer = new Transfer(senderAccount, receiverAccount, amount, FOR_LUNCH);
+        NewTransfer newTransfer = new NewTransfer(senderAccount, receiverAccount, amount, FOR_LUNCH);
         try {
-            transferService.transfer(transfer);
-            fail("transfer service should throw insufficient funds exception");
+            transferService.transfer(newTransfer);
+            fail("newTransfer service should throw insufficient funds exception");
         } catch (InsufficientFundsException ex) {
             assertThat(senderAccount.getBalance(), is(senderBalance));
             assertThat(receiverAccount.getBalance(), is(receiverBalance));

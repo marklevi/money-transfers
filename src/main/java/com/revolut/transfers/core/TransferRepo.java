@@ -6,19 +6,19 @@ import java.util.UUID;
 
 public class TransferRepo {
 
-    private final Map<String, Transfer> dataStore;
+    private final Map<String, NewTransfer> dataStore;
 
     public TransferRepo() {
         dataStore = new HashMap<>();
     }
 
-    public String addTransfer(Transfer transfer) {
+    public String addTransfer(NewTransfer newTransfer) {
         String transferId = UUID.randomUUID().toString();
-        dataStore.put(transferId, transfer);
+        dataStore.put(transferId, newTransfer);
         return transferId;
     }
 
-    public Transfer getTransfer(String transferId) {
+    public NewTransfer getTransfer(String transferId) {
         return dataStore.get(transferId);
     }
 }

@@ -11,11 +11,11 @@ public class TransferService {
         this.transferRepo = transferRepo;
     }
 
-    public String transfer(Transfer transfer) {
-        Account senderAccount = transfer.getSenderAccount();
-        Account receiverAccount = transfer.getReceiverAccount();
-        BigDecimal amount = transfer.getAmount();
-        LocalDate date = transfer.getDate();
+    public String transfer(NewTransfer newTransfer) {
+        Account senderAccount = newTransfer.getSenderAccount();
+        Account receiverAccount = newTransfer.getReceiverAccount();
+        BigDecimal amount = newTransfer.getAmount();
+        LocalDate date = newTransfer.getDate();
 
         if(!canAffordTransfer(senderAccount, amount)){
             throw new InsufficientFundsException();
@@ -23,7 +23,7 @@ public class TransferService {
         addEntryToAccount(senderAccount, amount.negate(), date);
         addEntryToAccount(receiverAccount, amount, date);
 
-        return transferRepo.addTransfer(transfer);
+        return transferRepo.addTransfer(newTransfer);
     }
 
     private boolean canAffordTransfer(Account senderAccount, BigDecimal amount) {

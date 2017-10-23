@@ -2,9 +2,7 @@ package com.revolut.transfers.resources;
 
 import com.revolut.transfers.api.TransferMadeResponse;
 import com.revolut.transfers.api.TransferRequest;
-import com.revolut.transfers.core.Account;
-import com.revolut.transfers.core.AccountService;
-import com.revolut.transfers.core.Transfer;
+import com.revolut.transfers.core.NewTransfer;
 import com.revolut.transfers.core.TransferService;
 
 import javax.validation.Valid;
@@ -14,8 +12,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.math.BigDecimal;
-import java.util.Optional;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
@@ -34,9 +30,9 @@ public class TransfersResource {
     @POST
     @Consumes(APPLICATION_JSON)
     public Response makeTransfer(@Valid TransferRequest transferRequest) {
-        Transfer transfer = newTransferMapper.mapFrom(transferRequest);
+        NewTransfer newTransfer = newTransferMapper.mapFrom(transferRequest);
 
-        String transferId = transferService.transfer(transfer);
+        String transferId = transferService.transfer(newTransfer);
         TransferMadeResponse transferMadeResponse = new TransferMadeResponse(transferId);
         return Response.status(Response.Status.CREATED).entity(transferMadeResponse).build();
 

@@ -3,7 +3,7 @@ package com.revolut.transfers.resources;
 import com.revolut.transfers.api.TransferRequest;
 import com.revolut.transfers.core.Account;
 import com.revolut.transfers.core.AccountService;
-import com.revolut.transfers.core.Transfer;
+import com.revolut.transfers.core.NewTransfer;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -34,11 +34,11 @@ public class NewTransferMapperTest {
         NewTransferMapper newTransferMapper = new NewTransferMapper(accountService);
         TransferRequest transferRequest = new TransferRequest(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID, AMOUNT, DESCRIPTION);
 
-        Transfer transfer = newTransferMapper.mapFrom(transferRequest);
+        NewTransfer newTransfer = newTransferMapper.mapFrom(transferRequest);
 
-        assertThat(transfer.getAmount(), is(new BigDecimal(AMOUNT)));
-        assertThat(transfer.getDescription(), is(DESCRIPTION));
-        assertThat(transfer.getSenderAccount(), is(senderAccount));
-        assertThat(transfer.getReceiverAccount(), is(receiverAccount));
+        assertThat(newTransfer.getAmount(), is(new BigDecimal(AMOUNT)));
+        assertThat(newTransfer.getDescription(), is(DESCRIPTION));
+        assertThat(newTransfer.getSenderAccount(), is(senderAccount));
+        assertThat(newTransfer.getReceiverAccount(), is(receiverAccount));
     }
 }
