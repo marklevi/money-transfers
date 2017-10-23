@@ -3,6 +3,8 @@ package com.revolut.transfers.core;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.math.BigDecimal;
+
 import static org.junit.Assert.assertTrue;
 
 public class AccountRepoTest {
@@ -13,7 +15,7 @@ public class AccountRepoTest {
     @Before
     public void setUp() throws Exception {
         accountRepo = new AccountRepo();
-        accountRepo.addAccount(new Account(SOME_ACCOUNT_ID));
+        accountRepo.addAccount(new Account(SOME_ACCOUNT_ID, new BigDecimal("0.00")));
     }
 
     @Test

@@ -14,7 +14,6 @@ import org.junit.Test;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -51,7 +50,7 @@ public class TransfersResourceTest {
         Account receiverAccount = createAccount(RECEIVER_ACCOUNT_ID);
         when(accountService.getAccount(RECEIVER_ACCOUNT_ID)).thenReturn(Optional.of(receiverAccount));
 
-        when(transferService.preformTransfer(new Transfer(senderAccount, receiverAccount, new BigDecimal(AMOUNT), DESCRIPTION))).thenReturn(transferId);
+        when(transferService.transfer(new Transfer(senderAccount, receiverAccount, new BigDecimal(AMOUNT), DESCRIPTION))).thenReturn(transferId);
 
         TransferRequest transferRequest = new TransferRequest(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID, AMOUNT, DESCRIPTION);
         Response response = resources.client()
@@ -67,7 +66,7 @@ public class TransfersResourceTest {
     }
 
     private Account createAccount(String senderAccountId) {
-        return new Account(senderAccountId);
+        return new Account(senderAccountId, new BigDecimal("0.00"));
     }
 
     @Test

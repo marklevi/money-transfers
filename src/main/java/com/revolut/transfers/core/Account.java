@@ -8,13 +8,13 @@ import java.util.HashSet;
 
 public class Account extends StructuralEquivalence {
     private final String accountId;
+    private BigDecimal overDraftLimit;
     private final Collection<Entry> ledger;
-    private final boolean allowOverdraft;
 
-    public Account(String accountId) {
+    public Account(String accountId, BigDecimal overDraftLimit) {
         this.accountId = accountId;
+        this.overDraftLimit = overDraftLimit;
         this.ledger = new HashSet<>();
-        this.allowOverdraft = false;
     }
 
     public String getAccountId() {
@@ -37,4 +37,9 @@ public class Account extends StructuralEquivalence {
                 .reduce(BigDecimal::add)
                 .orElse(BigDecimal.ZERO);
     }
+
+    public BigDecimal getAvailableBalance() {
+        return this.getBalance().add(overDraftLimit);
+    }
+
 }

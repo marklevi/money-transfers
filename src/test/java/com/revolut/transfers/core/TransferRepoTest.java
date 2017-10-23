@@ -20,8 +20,8 @@ public class TransferRepoTest {
 
     @Before
     public void setUp() throws Exception {
-        senderAccount = new Account(SENDER_ACCOUNT_ID);
-        receiverAccount = new Account(RECEIVER_ACCOUNT_ID);
+        senderAccount = new Account(SENDER_ACCOUNT_ID, new BigDecimal("0.00"));
+        receiverAccount = new Account(RECEIVER_ACCOUNT_ID, new BigDecimal("0.00"));
     }
 
     @Test

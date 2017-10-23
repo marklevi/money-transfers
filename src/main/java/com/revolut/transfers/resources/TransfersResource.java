@@ -34,11 +34,13 @@ public class TransfersResource {
     @POST
     @Consumes(APPLICATION_JSON)
     public Response makeTransfer(@Valid TransferRequest transferRequest) {
+        // transferRequest -> newTransfer mapper
         Optional<Account> senderAccount = accountService.getAccount(transferRequest.getSender());
         Optional<Account> receiverAccount = accountService.getAccount(transferRequest.getReceiver());
+        // validation in amount
 
         if (senderAccount.isPresent() && receiverAccount.isPresent()) {
-            String transferId = transferService.preformTransfer(getTransfer(transferRequest, senderAccount.get(), receiverAccount.get()));
+            String transferId = transferService.transfer(getTransfer(transferRequest, senderAccount.get(), receiverAccount.get()));
             TransferMadeResponse transferMadeResponse = new TransferMadeResponse(transferId);
             return Response.status(Response.Status.CREATED).entity(transferMadeResponse).build();
 
