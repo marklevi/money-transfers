@@ -51,7 +51,7 @@ public class TransferServiceTest {
 
     @Test
     public void shouldAllowTransferForCustomerOverdraft() throws Exception {
-        Account senderAccount = new Account(SENDER_ACCOUNT_ID, new BigDecimal("0.00"));
+        Account senderAccount = new Account(SENDER_ACCOUNT_ID, new BigDecimal("100.00"));
         senderAccount.addEntry(new Entry(new BigDecimal("10.00"), LocalDate.now()));
 
         Account receiverAccount = new Account(RECEIVER_ACCOUNT_ID, new BigDecimal("0.00"));

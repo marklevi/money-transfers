@@ -6,6 +6,7 @@ import com.revolut.transfers.core.AccountRepo;
 import com.revolut.transfers.core.AccountService;
 import com.revolut.transfers.core.TransferRepo;
 import com.revolut.transfers.core.TransferService;
+import com.revolut.transfers.resources.NewTransferMapper;
 import com.revolut.transfers.resources.TransfersResource;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
@@ -40,7 +41,7 @@ public class MoneyTransfersApplication extends Application<MoneyTransfersConfigu
     public void run(MoneyTransfersConfiguration configuration, Environment environment) {
         AccountService accountService = new AccountService(new AccountRepo());
         TransferService transferService = new TransferService(new TransferRepo());
-        TransfersResource transfersResource = new TransfersResource(accountService, transferService);
+        TransfersResource transfersResource = new TransfersResource(transferService, new NewTransferMapper(accountService));
         environment.jersey().register(transfersResource );
     }
 

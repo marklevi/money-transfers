@@ -14,7 +14,6 @@ import org.junit.Test;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
-import java.util.Optional;
 import java.util.UUID;
 
 import static com.revolut.transfers.MoneyTransfersApplication.decorateObjectMapper;
@@ -28,31 +27,33 @@ public class TransfersResourceTest {
     private static final String SENDER_ACCOUNT_ID = "sender-account-id";
     private static final String RECEIVER_ACCOUNT_ID = "receiver-account-id";
 
-    private static final AccountService accountService = mock(AccountService.class);
     private static final TransferService transferService = mock(TransferService.class);
+    private static final NewTransferMapper newTransferMapper = mock(NewTransferMapper.class);
 
 
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
             .setMapper(decorateObjectMapper(new ObjectMapper()))
-            .addResource(new TransfersResource(accountService, transferService))
+            .addResource(new TransfersResource(transferService, newTransferMapper))
             .build();
     private static final String AMOUNT = "200.00";
     private static final String DESCRIPTION = "description";
+    private static final String INVALID_ACCOUNT_ID = "invalid-account-id";
+
 
     @Test
     public void makeTransfer() {
         String transferId = UUID.randomUUID().toString();
 
         Account senderAccount = createAccount(SENDER_ACCOUNT_ID);
-        when(accountService.getAccount(SENDER_ACCOUNT_ID)).thenReturn(Optional.of(senderAccount));
-
         Account receiverAccount = createAccount(RECEIVER_ACCOUNT_ID);
-        when(accountService.getAccount(RECEIVER_ACCOUNT_ID)).thenReturn(Optional.of(receiverAccount));
-
-        when(transferService.transfer(new Transfer(senderAccount, receiverAccount, new BigDecimal(AMOUNT), DESCRIPTION))).thenReturn(transferId);
 
         TransferRequest transferRequest = new TransferRequest(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID, AMOUNT, DESCRIPTION);
+        Transfer newTransfer = new Transfer(senderAccount, receiverAccount, new BigDecimal(AMOUNT), DESCRIPTION);
+
+        when(newTransferMapper.mapFrom(transferRequest)).thenReturn(newTransfer);
+        when(transferService.transfer(newTransfer)).thenReturn(transferId);
+
         Response response = resources.client()
                 .target("/transfers")
                 .request()
@@ -69,19 +70,19 @@ public class TransfersResourceTest {
         return new Account(senderAccountId, new BigDecimal("0.00"));
     }
 
-    @Test
-    public void shouldReturn404WhenAccountDoesNotExist() {
-        when(accountService.getAccount(SENDER_ACCOUNT_ID)).thenReturn(Optional.empty());
-        when(accountService.getAccount(RECEIVER_ACCOUNT_ID)).thenReturn(Optional.empty());
+    // TODO: 23/10/2017 return 422 response code with exception mapper
+    @Test()
+    public void shouldReturn422WhenEitherAccountDoesNotExist() {
+        TransferRequest transferRequest = new TransferRequest(SENDER_ACCOUNT_ID, INVALID_ACCOUNT_ID, "200.00", "description");
+        when(newTransferMapper.mapFrom(transferRequest)).thenThrow(AccountDoesNotExistException.class);
 
-        TransferRequest transferRequest = new TransferRequest(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID, "200.00", "description");
         Response response = resources.client()
                 .target("/transfers")
                 .request()
                 .post(Entity.json(transferRequest));
 
         assertThat(response.getStatus())
-                .isEqualTo(NOT_FOUND_404);
+                .isEqualTo(INTERNAL_SERVER_ERROR_500);
 
     }
 

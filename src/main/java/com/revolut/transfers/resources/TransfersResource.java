@@ -23,34 +23,23 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 @Produces(MediaType.APPLICATION_JSON)
 public class TransfersResource {
 
-    private AccountService accountService;
     private TransferService transferService;
+    private NewTransferMapper newTransferMapper;
 
-    public TransfersResource(AccountService accountService, TransferService transferService) {
-        this.accountService = accountService;
+    public TransfersResource(TransferService transferService, NewTransferMapper newTransferMapper) {
         this.transferService = transferService;
+        this.newTransferMapper = newTransferMapper;
     }
 
     @POST
     @Consumes(APPLICATION_JSON)
     public Response makeTransfer(@Valid TransferRequest transferRequest) {
-        // transferRequest -> newTransfer mapper
-        Optional<Account> senderAccount = accountService.getAccount(transferRequest.getSender());
-        Optional<Account> receiverAccount = accountService.getAccount(transferRequest.getReceiver());
-        // validation in amount
+        Transfer transfer = newTransferMapper.mapFrom(transferRequest);
 
-        if (senderAccount.isPresent() && receiverAccount.isPresent()) {
-            String transferId = transferService.transfer(getTransfer(transferRequest, senderAccount.get(), receiverAccount.get()));
-            TransferMadeResponse transferMadeResponse = new TransferMadeResponse(transferId);
-            return Response.status(Response.Status.CREATED).entity(transferMadeResponse).build();
+        String transferId = transferService.transfer(transfer);
+        TransferMadeResponse transferMadeResponse = new TransferMadeResponse(transferId);
+        return Response.status(Response.Status.CREATED).entity(transferMadeResponse).build();
 
-        }
-        return Response.status(Response.Status.NOT_FOUND).build();
     }
 
-    private Transfer getTransfer(@Valid TransferRequest transferRequest, Account senderAccount, Account receiverAccount) {
-        BigDecimal amount = new BigDecimal(transferRequest.getAmount());
-        String description = transferRequest.getDescription();
-        return new Transfer(senderAccount, receiverAccount, amount, description);
-    }
 }

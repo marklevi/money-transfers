@@ -1,8 +1,9 @@
 package com.revolut.transfers.api;
 
+import com.revolut.transfers.utils.StructuralEquivalence;
 import org.hibernate.validator.constraints.NotBlank;
 
-public class TransferRequest {
+public class TransferRequest extends StructuralEquivalence {
 
     @NotBlank
     private String sender;
