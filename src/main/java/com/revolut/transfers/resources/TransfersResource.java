@@ -1,17 +1,15 @@
 package com.revolut.transfers.resources;
 
-import com.revolut.transfers.api.TransferMadeResponse;
 import com.revolut.transfers.api.TransferRequest;
 import com.revolut.transfers.core.NewTransfer;
 import com.revolut.transfers.core.TransferService;
 
 import javax.validation.Valid;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
+import java.net.URI;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
@@ -27,14 +25,24 @@ public class TransfersResource {
         this.newTransferMapper = newTransferMapper;
     }
 
+    @GET
+    @Path("/{id}")
+    public Response getTransfer(@PathParam("id") String id){
+        return Response.status(Response.Status.OK).build();
+
+    }
+
     @POST
     @Consumes(APPLICATION_JSON)
     public Response makeTransfer(@Valid TransferRequest transferRequest) {
         NewTransfer newTransfer = newTransferMapper.mapFrom(transferRequest);
         String transferId = transferService.transfer(newTransfer);
-        TransferMadeResponse transferMadeResponse = new TransferMadeResponse(transferId);
-        return Response.status(Response.Status.CREATED).entity(transferMadeResponse).build();
+        return Response.seeOther(getRedirectUri(transferId)).build();
 
+    }
+
+    private URI getRedirectUri(String transferId) {
+        return UriBuilder.fromResource(TransfersResource.class).path(transferId).build();
     }
 
 }

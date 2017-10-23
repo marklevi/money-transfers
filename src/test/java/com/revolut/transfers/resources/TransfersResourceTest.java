@@ -2,7 +2,6 @@ package com.revolut.transfers.resources;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revolut.transfers.api.TransferRequest;
-import com.revolut.transfers.api.TransferMadeResponse;
 import com.revolut.transfers.core.Account;
 import com.revolut.transfers.core.NewTransfer;
 import com.revolut.transfers.core.TransferService;
@@ -59,10 +58,7 @@ public class TransfersResourceTest {
                 .post(Entity.json(transferRequest));
 
         assertThat(response.getStatus())
-                .isEqualTo(CREATED_201);
-
-        TransferMadeResponse transferMadeResponse = response.readEntity(TransferMadeResponse.class);
-        assertThat(transferMadeResponse.getTransferId()).isEqualTo(transferId);
+                .isEqualTo(OK_200);
     }
 
     private Account createAccount(String senderAccountId) {
