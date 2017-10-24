@@ -19,12 +19,12 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 @Path("/transfers")
 @Produces(MediaType.APPLICATION_JSON)
-public class TransfersResource {
+public class TransferResource {
 
     private TransferService transferService;
     private NewTransferMapper newTransferMapper;
 
-    public TransfersResource(TransferService transferService, NewTransferMapper newTransferMapper) {
+    public TransferResource(TransferService transferService, NewTransferMapper newTransferMapper) {
         this.transferService = transferService;
         this.newTransferMapper = newTransferMapper;
     }
@@ -51,7 +51,7 @@ public class TransfersResource {
     }
 
     private URI getRedirectUri(String transferId) {
-        return UriBuilder.fromResource(TransfersResource.class).path(transferId).build();
+        return UriBuilder.fromResource(TransferResource.class).path(transferId).build();
     }
 
 }

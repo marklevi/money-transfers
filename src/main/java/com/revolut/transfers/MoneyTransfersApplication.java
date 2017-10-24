@@ -10,7 +10,7 @@ import com.revolut.transfers.core.transfer.NewTransferMapper;
 import com.revolut.transfers.core.transfer.TransferMapper;
 import com.revolut.transfers.core.transfer.TransferRepo;
 import com.revolut.transfers.core.transfer.TransferService;
-import com.revolut.transfers.resources.TransfersResource;
+import com.revolut.transfers.resources.TransferResource;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
@@ -50,8 +50,8 @@ public class MoneyTransfersApplication extends Application<MoneyTransfersConfigu
         AccountService accountService = new AccountService(new AccountRepo());
         NewTransferMapper newTransferMapper = new NewTransferMapper(accountService);
 
-        TransfersResource transfersResource = new TransfersResource(transferService, newTransferMapper);
-        environment.jersey().register(transfersResource );
+        TransferResource transferResource = new TransferResource(transferService, newTransferMapper);
+        environment.jersey().register(transferResource);
     }
 
 }

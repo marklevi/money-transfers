@@ -27,7 +27,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 
-public class TransfersResourceTest {
+public class TransferResourceTest {
 
     private static final String SENDER_ACCOUNT_ID = "sender-account-id";
     private static final String RECEIVER_ACCOUNT_ID = "receiver-account-id";
@@ -39,7 +39,7 @@ public class TransfersResourceTest {
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
             .setMapper(decorateObjectMapper(new ObjectMapper()))
-            .addResource(new TransfersResource(transferService, newTransferMapper))
+            .addResource(new TransferResource(transferService, newTransferMapper))
             .build();
     private static final BigDecimal AMOUNT = new BigDecimal("200.00");
     private static final String DESCRIPTION = "description";
