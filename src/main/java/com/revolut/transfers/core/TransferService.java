@@ -1,37 +1,39 @@
 package com.revolut.transfers.core;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 public class TransferService {
 
     private TransferRepo transferRepo;
+    private TransferMapper transferMapper;
 
-    public TransferService(TransferRepo transferRepo) {
+    public TransferService(TransferRepo transferRepo, TransferMapper transferMapper) {
         this.transferRepo = transferRepo;
+        this.transferMapper = transferMapper;
     }
 
-    public String transfer(NewTransfer newTransfer) {
+    public Transfer transfer(NewTransfer newTransfer) {
         Account senderAccount = newTransfer.getSenderAccount();
         Account receiverAccount = newTransfer.getReceiverAccount();
         BigDecimal amount = newTransfer.getAmount();
-        LocalDate date = newTransfer.getDate();
 
-        if(!canAffordTransfer(senderAccount, amount)){
+        if (!canAffordTransfer(senderAccount, amount)) {
             throw new InsufficientFundsException();
         }
-        addEntryToAccount(senderAccount, amount.negate(), date);
-        addEntryToAccount(receiverAccount, amount, date);
 
-        return transferRepo.addTransfer(newTransfer);
+        addEntryToAccount(senderAccount, amount.negate());
+        addEntryToAccount(receiverAccount, amount);
+
+        Transfer transfer = transferMapper.mapFrom(newTransfer);
+        return transferRepo.addTransfer(transfer);
     }
 
     private boolean canAffordTransfer(Account senderAccount, BigDecimal amount) {
         return senderAccount.getAvailableBalance().compareTo(amount) > 0;
     }
 
-    private Entry addEntryToAccount(Account account, BigDecimal amount, LocalDate date){
-        Entry entry = new Entry(amount, date);
-        return account.addEntry(entry);
+    private void addEntryToAccount(Account account, BigDecimal amount) {
+        Entry entry = new Entry(amount);
+        account.addEntry(entry);
     }
 }

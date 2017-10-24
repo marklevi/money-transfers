@@ -7,9 +7,9 @@ public class Entry {
     private final BigDecimal amount;
     private final LocalDate date;
 
-    public Entry(BigDecimal amount, LocalDate date) {
+    public Entry(BigDecimal amount) {
         this.amount = amount;
-        this.date = date;
+        this.date = LocalDate.now();
     }
 
     public BigDecimal getAmount() {

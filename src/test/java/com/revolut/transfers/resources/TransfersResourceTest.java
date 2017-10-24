@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revolut.transfers.api.TransferRequest;
 import com.revolut.transfers.core.Account;
 import com.revolut.transfers.core.NewTransfer;
+import com.revolut.transfers.core.Transfer;
 import com.revolut.transfers.core.TransferService;
 import io.dropwizard.testing.junit.ResourceTestRule;
 import org.junit.ClassRule;
@@ -41,16 +42,14 @@ public class TransfersResourceTest {
 
     @Test
     public void makeTransfer() {
-        String transferId = UUID.randomUUID().toString();
-
         Account senderAccount = createAccount(SENDER_ACCOUNT_ID);
         Account receiverAccount = createAccount(RECEIVER_ACCOUNT_ID);
 
         TransferRequest transferRequest = new TransferRequest(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID, AMOUNT, DESCRIPTION);
-        NewTransfer newNewTransfer = new NewTransfer(senderAccount, receiverAccount, new BigDecimal(AMOUNT), DESCRIPTION);
+        NewTransfer newTransfer = new NewTransfer(senderAccount, receiverAccount, new BigDecimal(AMOUNT), DESCRIPTION);
 
-        when(newTransferMapper.mapFrom(transferRequest)).thenReturn(newNewTransfer);
-        when(transferService.transfer(newNewTransfer)).thenReturn(transferId);
+        when(newTransferMapper.mapFrom(transferRequest)).thenReturn(newTransfer);
+        when(transferService.transfer(newTransfer)).thenReturn(new Transfer(newTransfer));
 
         Response response = resources.client()
                 .target("/transfers")

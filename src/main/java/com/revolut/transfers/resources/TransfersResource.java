@@ -2,6 +2,7 @@ package com.revolut.transfers.resources;
 
 import com.revolut.transfers.api.TransferRequest;
 import com.revolut.transfers.core.NewTransfer;
+import com.revolut.transfers.core.Transfer;
 import com.revolut.transfers.core.TransferService;
 
 import javax.validation.Valid;
@@ -36,8 +37,8 @@ public class TransfersResource {
     @Consumes(APPLICATION_JSON)
     public Response makeTransfer(@Valid TransferRequest transferRequest) {
         NewTransfer newTransfer = newTransferMapper.mapFrom(transferRequest);
-        String transferId = transferService.transfer(newTransfer);
-        return Response.seeOther(getRedirectUri(transferId)).build();
+        Transfer transfer = transferService.transfer(newTransfer);
+        return Response.seeOther(getRedirectUri(transfer.getId())).build();
 
     }
 

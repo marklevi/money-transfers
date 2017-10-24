@@ -2,23 +2,21 @@ package com.revolut.transfers.core;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public class TransferRepo {
 
-    private final Map<String, NewTransfer> dataStore;
+    private final Map<String, Transfer> dataStore;
 
     public TransferRepo() {
         dataStore = new HashMap<>();
     }
 
-    public String addTransfer(NewTransfer newTransfer) {
-        String transferId = UUID.randomUUID().toString();
-        dataStore.put(transferId, newTransfer);
-        return transferId;
+    public Transfer addTransfer(Transfer transfer) {
+        dataStore.put(transfer.getId(), transfer);
+        return transfer;
     }
 
-    public NewTransfer getTransfer(String transferId) {
+    public Transfer getTransfer(String transferId) {
         return dataStore.get(transferId);
     }
 }

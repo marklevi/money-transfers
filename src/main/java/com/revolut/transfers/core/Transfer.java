@@ -4,18 +4,24 @@ import com.revolut.transfers.utils.StructuralEquivalence;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.UUID;
 
-public class NewTransfer extends StructuralEquivalence {
+public class Transfer extends StructuralEquivalence {
     private final Account senderAccount;
     private final Account receiverAccount;
     private final BigDecimal amount;
     private final String description;
+    private final String id;
+    private final LocalDate createdAt;
 
-    public NewTransfer(Account senderAccount, Account receiverAccount, BigDecimal amount, String description) {
-        this.senderAccount = senderAccount;
-        this.receiverAccount = receiverAccount;
-        this.amount = amount;
-        this.description = description;
+    public Transfer(NewTransfer newTransfer) {
+        senderAccount = newTransfer.getSenderAccount();
+        receiverAccount = newTransfer.getReceiverAccount();
+        amount = newTransfer.getAmount();
+        description = newTransfer.getDescription();
+        id = UUID.randomUUID().toString();
+        createdAt = LocalDate.now();
+
     }
 
     public Account getSenderAccount() {
@@ -34,4 +40,11 @@ public class NewTransfer extends StructuralEquivalence {
         return description;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public LocalDate getCreatedAt() {
+        return createdAt;
+    }
 }
