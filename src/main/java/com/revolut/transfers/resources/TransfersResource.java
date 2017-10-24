@@ -1,6 +1,7 @@
 package com.revolut.transfers.resources;
 
 import com.revolut.transfers.api.TransferRequest;
+import com.revolut.transfers.api.TransferResponse;
 import com.revolut.transfers.core.transfer.NewTransfer;
 import com.revolut.transfers.core.transfer.NewTransferMapper;
 import com.revolut.transfers.core.transfer.Transfer;
@@ -12,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
+import java.util.Optional;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
@@ -30,7 +32,12 @@ public class TransfersResource {
     @GET
     @Path("/{id}")
     public Response getTransfer(@PathParam("id") String id){
-        return Response.status(Response.Status.OK).build();
+        Optional<Transfer> transfer = transferService.getTransfer(id);
+        if (transfer.isPresent()) {
+            TransferResponse entity = new TransferResponse(transfer.get());
+            return Response.status(Response.Status.OK).entity(entity).build();
+        }
+        return Response.status(Response.Status.NOT_FOUND).build();
 
     }
 

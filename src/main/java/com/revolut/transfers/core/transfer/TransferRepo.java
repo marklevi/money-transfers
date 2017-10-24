@@ -2,6 +2,7 @@ package com.revolut.transfers.core.transfer;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class TransferRepo {
 
@@ -16,7 +17,7 @@ public class TransferRepo {
         return transfer;
     }
 
-    public Transfer getTransfer(String transferId) {
-        return dataStore.get(transferId);
+    public Optional<Transfer> getTransfer(String transferId) {
+        return Optional.ofNullable(dataStore.get(transferId));
     }
 }

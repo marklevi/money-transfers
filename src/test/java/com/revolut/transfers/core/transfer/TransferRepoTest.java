@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -32,7 +33,7 @@ public class TransferRepoTest {
         TransferRepo transferRepo = new TransferRepo();
         Transfer transfer = transferRepo.addTransfer(new Transfer(newTransfer));
 
-        assertThat(transferRepo.getTransfer(transfer.getId()), is(transfer));
+        assertThat(transferRepo.getTransfer(transfer.getId()), is(Optional.of(transfer)));
 
 
     }

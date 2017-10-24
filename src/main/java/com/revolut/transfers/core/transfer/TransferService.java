@@ -5,6 +5,7 @@ import com.revolut.transfers.core.account.Entry;
 import com.revolut.transfers.core.exception.InsufficientFundsException;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 public class TransferService {
 
@@ -39,5 +40,9 @@ public class TransferService {
     private void addEntryToAccount(Account account, BigDecimal amount) {
         Entry entry = new Entry(amount);
         account.addEntry(entry);
+    }
+
+    public Optional<Transfer> getTransfer(String id) {
+        return transferRepo.getTransfer(id);
     }
 }

@@ -2,6 +2,7 @@ package com.revolut.transfers.resources;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revolut.transfers.api.TransferRequest;
+import com.revolut.transfers.api.TransferResponse;
 import com.revolut.transfers.core.account.Account;
 import com.revolut.transfers.core.exception.AccountDoesNotExistException;
 import com.revolut.transfers.core.transfer.NewTransfer;
@@ -15,12 +16,16 @@ import org.junit.Test;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
+import java.util.Optional;
 
 import static com.revolut.transfers.MoneyTransfersApplication.decorateObjectMapper;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.eclipse.jetty.http.HttpStatus.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
 
 public class TransfersResourceTest {
 
@@ -50,7 +55,9 @@ public class TransfersResourceTest {
         NewTransfer newTransfer = new NewTransfer(senderAccount, receiverAccount, AMOUNT, DESCRIPTION);
 
         when(newTransferMapper.mapFrom(transferRequest)).thenReturn(newTransfer);
-        when(transferService.transfer(newTransfer)).thenReturn(new Transfer(newTransfer));
+        Transfer expectedTransfer = new Transfer(newTransfer);
+        when(transferService.transfer(newTransfer)).thenReturn(expectedTransfer);
+        when(transferService.getTransfer(expectedTransfer.getId())).thenReturn(Optional.of(expectedTransfer));
 
         Response response = resources.client()
                 .target("/transfers")
@@ -59,6 +66,9 @@ public class TransfersResourceTest {
 
         assertThat(response.getStatus())
                 .isEqualTo(OK_200);
+
+        TransferResponse transferResponse = response.readEntity(TransferResponse.class);
+        assertThat(transferResponse.getId(), is(expectedTransfer.getId()));
     }
 
     private Account createAccount(String senderAccountId) {
@@ -104,6 +114,5 @@ public class TransfersResourceTest {
 
         assertThat(response.getStatus())
                 .isEqualTo(UNPROCESSABLE_ENTITY_422);
-
     }
 }
