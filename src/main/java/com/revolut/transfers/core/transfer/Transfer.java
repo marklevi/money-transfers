@@ -14,8 +14,10 @@ public class Transfer extends StructuralEquivalence {
     private final String description;
     private final String id;
     private final LocalDate createdAt;
+    private final String nonce;
 
     public Transfer(NewTransfer newTransfer) {
+        nonce = newTransfer.getNonce();
         senderAccount = newTransfer.getSenderAccount();
         receiverAccount = newTransfer.getReceiverAccount();
         amount = newTransfer.getAmount();
@@ -47,5 +49,9 @@ public class Transfer extends StructuralEquivalence {
 
     public LocalDate getCreatedAt() {
         return createdAt;
+    }
+
+    public String getNonce() {
+        return nonce;
     }
 }

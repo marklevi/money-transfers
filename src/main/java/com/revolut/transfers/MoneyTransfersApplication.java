@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.revolut.transfers.core.account.AccountRepo;
 import com.revolut.transfers.core.account.AccountService;
+import com.revolut.transfers.core.exception.AccountDoesNotExistExceptionMapper;
+import com.revolut.transfers.core.exception.DoubleSpendingAttemptedExceptionMapper;
 import com.revolut.transfers.core.transfer.NewTransferMapper;
 import com.revolut.transfers.core.transfer.TransferMapper;
 import com.revolut.transfers.core.transfer.TransferRepo;
@@ -50,12 +52,16 @@ public class MoneyTransfersApplication extends Application<MoneyTransfersConfigu
         AccountRepo accountRepo = new AccountRepo();
         environment.jersey().register(getTransferResource(accountRepo));
         environment.jersey().register(new SeedDataResource(accountRepo));
+
+        environment.jersey().register(new DoubleSpendingAttemptedExceptionMapper());
+        environment.jersey().register(new AccountDoesNotExistExceptionMapper());
+
     }
 
     private TransferResource getTransferResource(AccountRepo accountRepo) {
         TransferService transferService = new TransferService(new TransferRepo(), new TransferMapper());
         AccountService accountService = new AccountService(accountRepo);
-        NewTransferMapper newTransferMapper = new NewTransferMapper(accountService);
+        NewTransferMapper newTransferMapper = new NewTransferMapper(accountService, transferService);
 
         return new TransferResource(transferService, newTransferMapper);
     }

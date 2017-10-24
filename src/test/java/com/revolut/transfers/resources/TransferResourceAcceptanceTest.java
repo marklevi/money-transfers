@@ -16,9 +16,11 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.eclipse.jetty.http.HttpStatus.OK_200;
+import static org.eclipse.jetty.http.HttpStatus.UNPROCESSABLE_ENTITY_422;
 
 public class TransferResourceAcceptanceTest {
 
@@ -51,13 +53,10 @@ public class TransferResourceAcceptanceTest {
     }
 
     @Test
-    public void CreateTransferRedirectsAfterPost() {
-        Response response = client.target(
-                String.format("http://localhost:%d/transfers", SUPPORT.getLocalPort()))
-                .request()
-                .post(Entity.json(transferRequest()));
+    public void createTransferRedirectsAfterPost() {
+        Response response = makeTransfer(UUID.randomUUID().toString());
 
-        assertThat(response.getStatus()).isEqualTo(200);
+        assertThat(response.getStatus()).isEqualTo(OK_200);
         TransferResponse transferResponse = response.readEntity(TransferResponse.class);
         assertThat(transferResponse.getSender()).isEqualTo(SOME_ACCOUNT_A);
         assertThat(transferResponse.getReceiver()).isEqualTo(SOME_ACCOUNT_B);
@@ -65,8 +64,28 @@ public class TransferResourceAcceptanceTest {
         assertThat(transferResponse.getDescription()).isEqualTo(DESCRIPTION);
     }
 
-    private TransferRequest transferRequest() {
-        return new TransferRequest(SOME_ACCOUNT_A, SOME_ACCOUNT_B, AMOUNT, DESCRIPTION);
+    @Test
+    public void shouldReturn422ForARequestWithTheSameNonce() {
+        UUID nonce = UUID.randomUUID();
+        Response firstResponse = makeTransfer(nonce.toString());
+        assertThat(firstResponse.getStatus()).isEqualTo(OK_200);
+
+        Response secondResponse = makeTransfer(nonce.toString());
+
+        assertThat(secondResponse.getStatus()).isEqualTo(UNPROCESSABLE_ENTITY_422);
+
+    }
+
+    private Response makeTransfer(String nonce) {
+        return client.target(
+                String.format("http://localhost:%d/transfers", SUPPORT.getLocalPort()))
+                .request()
+                .post(Entity.json(transferRequest(nonce)));
+    }
+
+
+    private TransferRequest transferRequest(String nonce) {
+        return new TransferRequest(nonce, SOME_ACCOUNT_A, SOME_ACCOUNT_B, AMOUNT, DESCRIPTION);
     }
 
     private Response seedData() {

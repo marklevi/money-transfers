@@ -33,6 +33,14 @@ public class TransferService {
         return transferRepo.addTransfer(transfer);
     }
 
+    public Optional<Transfer> getTransfer(String id) {
+        return transferRepo.getTransfer(id);
+    }
+
+    public boolean hasNonce(String nonce) {
+        return transferRepo.hasNonce(nonce);
+    }
+
     private boolean canAffordTransfer(Account senderAccount, BigDecimal amount) {
         return senderAccount.getAvailableBalance().compareTo(amount) > 0;
     }
@@ -40,9 +48,5 @@ public class TransferService {
     private void addEntryToAccount(Account account, BigDecimal amount) {
         Entry entry = new Entry(amount);
         account.addEntry(entry);
-    }
-
-    public Optional<Transfer> getTransfer(String id) {
-        return transferRepo.getTransfer(id);
     }
 }

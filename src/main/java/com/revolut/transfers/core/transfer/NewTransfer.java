@@ -10,12 +10,14 @@ public class NewTransfer extends StructuralEquivalence {
     private final Account receiverAccount;
     private final BigDecimal amount;
     private final String description;
+    private String nonce;
 
-    public NewTransfer(Account senderAccount, Account receiverAccount, BigDecimal amount, String description) {
+    public NewTransfer(String nonce, Account senderAccount, Account receiverAccount, BigDecimal amount, String description) {
         this.senderAccount = senderAccount;
         this.receiverAccount = receiverAccount;
         this.amount = amount;
         this.description = description;
+        this.nonce = nonce;
     }
 
     public Account getSenderAccount() {
@@ -34,4 +36,7 @@ public class NewTransfer extends StructuralEquivalence {
         return description;
     }
 
+    public String getNonce() {
+        return nonce;
+    }
 }

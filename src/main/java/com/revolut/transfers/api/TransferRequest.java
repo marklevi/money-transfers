@@ -9,6 +9,9 @@ import java.math.BigDecimal;
 public class TransferRequest extends StructuralEquivalence {
 
     @NotBlank
+    private String nonce;
+
+    @NotBlank
     private String sender;
 
     @NotBlank
@@ -23,7 +26,8 @@ public class TransferRequest extends StructuralEquivalence {
         /* For Jackson */
     }
 
-    public TransferRequest(String sender, String receiver, BigDecimal amount, String description) {
+    public TransferRequest(String nonce, String sender, String receiver, BigDecimal amount, String description) {
+        this.nonce = nonce;
         this.sender = sender;
         this.receiver = receiver;
         this.amount = amount;
@@ -44,5 +48,9 @@ public class TransferRequest extends StructuralEquivalence {
 
     public String getDescription() {
         return description;
+    }
+
+    public String getNonce() {
+        return nonce;
     }
 }

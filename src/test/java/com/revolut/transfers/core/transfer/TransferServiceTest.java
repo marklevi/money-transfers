@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -19,6 +20,8 @@ public class TransferServiceTest {
     private static final String SENDER_ACCOUNT_ID = "sender-account-id";
     private static final String RECEIVER_ACCOUNT_ID = "receiver-account-id";
     private static final String FOR_LUNCH = "for lunch";
+    private static final String NONCE = UUID.randomUUID().toString();
+
 
     private static final TransferRepo transferRepo = mock(TransferRepo.class);
     private static final TransferMapper transferMapper = mock(TransferMapper.class);
@@ -37,7 +40,7 @@ public class TransferServiceTest {
         Account receiverAccount = new Account(RECEIVER_ACCOUNT_ID, new BigDecimal("0.00"));
         receiverAccount.addEntry(new Entry(new BigDecimal("100.00")));
 
-        NewTransfer newTransfer = new NewTransfer(senderAccount, receiverAccount, new BigDecimal("10.00"), FOR_LUNCH);
+        NewTransfer newTransfer = new NewTransfer(NONCE, senderAccount, receiverAccount, new BigDecimal("10.00"), FOR_LUNCH);
         Transfer transfer = new Transfer(newTransfer);
 
         when(transferMapper.mapFrom(newTransfer)).thenReturn(transfer);
@@ -59,7 +62,7 @@ public class TransferServiceTest {
         Account receiverAccount = new Account(RECEIVER_ACCOUNT_ID, new BigDecimal("0.00"));
         receiverAccount.addEntry(new Entry(new BigDecimal("100.00")));
 
-        NewTransfer newTransfer = new NewTransfer(senderAccount, receiverAccount, new BigDecimal("20.00"), FOR_LUNCH);
+        NewTransfer newTransfer = new NewTransfer(NONCE, senderAccount, receiverAccount, new BigDecimal("20.00"), FOR_LUNCH);
         Transfer transfer = new Transfer(newTransfer);
 
         when(transferMapper.mapFrom(newTransfer)).thenReturn(transfer);
@@ -86,7 +89,7 @@ public class TransferServiceTest {
         receiverAccount.addEntry(new Entry(receiverBalance));
 
         BigDecimal amount = new BigDecimal("40.00");
-        NewTransfer newTransfer = new NewTransfer(senderAccount, receiverAccount, amount, FOR_LUNCH);
+        NewTransfer newTransfer = new NewTransfer(NONCE, senderAccount, receiverAccount, amount, FOR_LUNCH);
         try {
             transferService.transfer(newTransfer);
             fail("newTransfer service should throw insufficient funds exception");
