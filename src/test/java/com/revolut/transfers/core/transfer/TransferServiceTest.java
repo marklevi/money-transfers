@@ -1,5 +1,8 @@
-package com.revolut.transfers.core;
+package com.revolut.transfers.core.transfer;
 
+import com.revolut.transfers.core.account.Account;
+import com.revolut.transfers.core.account.Entry;
+import com.revolut.transfers.core.exception.InsufficientFundsException;
 import org.junit.Before;
 import org.junit.Test;
 

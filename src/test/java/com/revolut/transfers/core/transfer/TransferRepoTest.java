@@ -1,5 +1,6 @@
-package com.revolut.transfers.core;
+package com.revolut.transfers.core.transfer;
 
+import com.revolut.transfers.core.account.Account;
 import org.junit.Before;
 import org.junit.Test;
 

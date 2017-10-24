@@ -1,4 +1,4 @@
-package com.revolut.transfers.core;
+package com.revolut.transfers.core.transfer;
 
 import java.util.HashMap;
 import java.util.Map;

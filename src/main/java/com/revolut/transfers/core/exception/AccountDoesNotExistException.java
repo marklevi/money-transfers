@@ -1,4 +1,4 @@
-package com.revolut.transfers.resources;
+package com.revolut.transfers.core.exception;
 
 public class AccountDoesNotExistException extends RuntimeException {
 

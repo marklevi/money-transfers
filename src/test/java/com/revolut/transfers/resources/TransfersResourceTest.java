@@ -2,10 +2,12 @@ package com.revolut.transfers.resources;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revolut.transfers.api.TransferRequest;
-import com.revolut.transfers.core.Account;
-import com.revolut.transfers.core.NewTransfer;
-import com.revolut.transfers.core.Transfer;
-import com.revolut.transfers.core.TransferService;
+import com.revolut.transfers.core.account.Account;
+import com.revolut.transfers.core.exception.AccountDoesNotExistException;
+import com.revolut.transfers.core.transfer.NewTransfer;
+import com.revolut.transfers.core.transfer.NewTransferMapper;
+import com.revolut.transfers.core.transfer.Transfer;
+import com.revolut.transfers.core.transfer.TransferService;
 import io.dropwizard.testing.junit.ResourceTestRule;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -13,7 +15,6 @@ import org.junit.Test;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
-import java.util.UUID;
 
 import static com.revolut.transfers.MoneyTransfersApplication.decorateObjectMapper;
 import static org.assertj.core.api.Assertions.assertThat;

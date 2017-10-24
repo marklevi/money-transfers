@@ -1,4 +1,4 @@
-package com.revolut.transfers.core;
+package com.revolut.transfers.core.account;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

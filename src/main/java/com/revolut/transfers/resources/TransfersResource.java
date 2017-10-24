@@ -1,9 +1,10 @@
 package com.revolut.transfers.resources;
 
 import com.revolut.transfers.api.TransferRequest;
-import com.revolut.transfers.core.NewTransfer;
-import com.revolut.transfers.core.Transfer;
-import com.revolut.transfers.core.TransferService;
+import com.revolut.transfers.core.transfer.NewTransfer;
+import com.revolut.transfers.core.transfer.NewTransferMapper;
+import com.revolut.transfers.core.transfer.Transfer;
+import com.revolut.transfers.core.transfer.TransferService;
 
 import javax.validation.Valid;
 import javax.ws.rs.*;

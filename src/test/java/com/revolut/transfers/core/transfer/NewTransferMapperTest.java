@@ -1,16 +1,16 @@
-package com.revolut.transfers.resources;
+package com.revolut.transfers.core.transfer;
 
 import com.revolut.transfers.api.TransferRequest;
-import com.revolut.transfers.core.Account;
-import com.revolut.transfers.core.AccountService;
-import com.revolut.transfers.core.NewTransfer;
+import com.revolut.transfers.core.account.Account;
+import com.revolut.transfers.core.account.AccountService;
+import com.revolut.transfers.core.exception.AccountDoesNotExistException;
 import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.util.Optional;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
