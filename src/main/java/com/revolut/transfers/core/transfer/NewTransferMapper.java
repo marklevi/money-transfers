@@ -24,7 +24,7 @@ public class NewTransferMapper {
             throw new AccountDoesNotExistException();
         }
 
-        BigDecimal amount = new BigDecimal(transferRequest.getAmount());
+        BigDecimal amount = transferRequest.getAmount();
         String description = transferRequest.getDescription();
         return new NewTransfer(senderAccount.get(), receiverAccount.get(), amount, description);
     }

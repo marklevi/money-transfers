@@ -36,7 +36,7 @@ public class TransfersResourceTest {
             .setMapper(decorateObjectMapper(new ObjectMapper()))
             .addResource(new TransfersResource(transferService, newTransferMapper))
             .build();
-    private static final String AMOUNT = "200.00";
+    private static final BigDecimal AMOUNT = new BigDecimal("200.00");
     private static final String DESCRIPTION = "description";
     private static final String INVALID_ACCOUNT_ID = "invalid-account-id";
 
@@ -47,7 +47,7 @@ public class TransfersResourceTest {
         Account receiverAccount = createAccount(RECEIVER_ACCOUNT_ID);
 
         TransferRequest transferRequest = new TransferRequest(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID, AMOUNT, DESCRIPTION);
-        NewTransfer newTransfer = new NewTransfer(senderAccount, receiverAccount, new BigDecimal(AMOUNT), DESCRIPTION);
+        NewTransfer newTransfer = new NewTransfer(senderAccount, receiverAccount, AMOUNT, DESCRIPTION);
 
         when(newTransferMapper.mapFrom(transferRequest)).thenReturn(newTransfer);
         when(transferService.transfer(newTransfer)).thenReturn(new Transfer(newTransfer));
@@ -68,7 +68,7 @@ public class TransfersResourceTest {
     // TODO: 23/10/2017 return 422 response code with exception mapper
     @Test()
     public void shouldReturn422WhenEitherAccountDoesNotExist() {
-        TransferRequest transferRequest = new TransferRequest(SENDER_ACCOUNT_ID, INVALID_ACCOUNT_ID, "200.00", "description");
+        TransferRequest transferRequest = new TransferRequest(SENDER_ACCOUNT_ID, INVALID_ACCOUNT_ID, AMOUNT, "description");
         when(newTransferMapper.mapFrom(transferRequest)).thenThrow(AccountDoesNotExistException.class);
 
         Response response = resources.client()
@@ -83,7 +83,20 @@ public class TransfersResourceTest {
 
     @Test
     public void shouldReturn422WhenAnyRequestsFieldsExceptDescriptionAreBlank() {
-        TransferRequest transferRequest = new TransferRequest("", RECEIVER_ACCOUNT_ID, "", "description");
+        TransferRequest transferRequest = new TransferRequest("", RECEIVER_ACCOUNT_ID, AMOUNT, "description");
+        Response response = resources.client()
+                .target("/transfers")
+                .request()
+                .post(Entity.json(transferRequest));
+
+        assertThat(response.getStatus())
+                .isEqualTo(UNPROCESSABLE_ENTITY_422);
+
+    }
+
+    @Test
+    public void shouldReturn422WhenAnyAmountIsInvalid() {
+        TransferRequest transferRequest = new TransferRequest("", RECEIVER_ACCOUNT_ID, AMOUNT.negate(), "description");
         Response response = resources.client()
                 .target("/transfers")
                 .request()

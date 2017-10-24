@@ -3,6 +3,9 @@ package com.revolut.transfers.api;
 import com.revolut.transfers.utils.StructuralEquivalence;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.DecimalMin;
+import java.math.BigDecimal;
+
 public class TransferRequest extends StructuralEquivalence {
 
     @NotBlank
@@ -11,8 +14,8 @@ public class TransferRequest extends StructuralEquivalence {
     @NotBlank
     private String receiver;
 
-    @NotBlank
-    private String amount;
+    @DecimalMin(value = "0.00")
+    private BigDecimal amount;
 
     private String description;
 
@@ -20,7 +23,7 @@ public class TransferRequest extends StructuralEquivalence {
         /* For Jackson */
     }
 
-    public TransferRequest(String sender, String receiver, String amount, String description) {
+    public TransferRequest(String sender, String receiver, BigDecimal amount, String description) {
         this.sender = sender;
         this.receiver = receiver;
         this.amount = amount;
@@ -35,7 +38,7 @@ public class TransferRequest extends StructuralEquivalence {
         return receiver;
     }
 
-    public String getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 

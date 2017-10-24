@@ -1,6 +1,10 @@
 package com.revolut.transfers;
 
+import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.deser.std.NumberDeserializers;
+import com.fasterxml.jackson.databind.deser.std.NumberDeserializers.BigDecimalDeserializer;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.revolut.transfers.core.account.AccountRepo;
 import com.revolut.transfers.core.account.AccountService;
@@ -13,6 +17,8 @@ import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 
+import java.math.BigDecimal;
+
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
 
 public class MoneyTransfersApplication extends Application<MoneyTransfersConfiguration> {
@@ -20,6 +26,7 @@ public class MoneyTransfersApplication extends Application<MoneyTransfersConfigu
     public static ObjectMapper decorateObjectMapper(ObjectMapper objectMapper) {
         return objectMapper
                 .registerModule(new Jdk8Module())
+                .registerModule(new SimpleModule().addDeserializer(BigDecimal.class, new BigDecimalDeserializer()))
                 .configure(FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
