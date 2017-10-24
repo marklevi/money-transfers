@@ -31,6 +31,8 @@ public class TransferResourceTest {
 
     private static final String SENDER_ACCOUNT_ID = "sender-account-id";
     private static final String RECEIVER_ACCOUNT_ID = "receiver-account-id";
+    private static final BigDecimal AMOUNT = new BigDecimal("200.00");
+    private static final String DESCRIPTION = "description";
 
     private static final TransferService transferService = mock(TransferService.class);
     private static final NewTransferMapper newTransferMapper = mock(NewTransferMapper.class);
@@ -41,8 +43,7 @@ public class TransferResourceTest {
             .setMapper(decorateObjectMapper(new ObjectMapper()))
             .addResource(new TransferResource(transferService, newTransferMapper))
             .build();
-    private static final BigDecimal AMOUNT = new BigDecimal("200.00");
-    private static final String DESCRIPTION = "description";
+
     private static final String INVALID_ACCOUNT_ID = "invalid-account-id";
 
 

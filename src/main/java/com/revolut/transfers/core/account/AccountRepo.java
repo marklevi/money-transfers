@@ -17,7 +17,9 @@ public class AccountRepo {
     }
 
     public Account addAccount(Account account) {
-        return dataStore.put(account.getAccountId(), account);
+        dataStore.put(account.getAccountId(), account);
+        return account;
+
     }
 
     public Optional<Account> getAccount(String accountId) {
