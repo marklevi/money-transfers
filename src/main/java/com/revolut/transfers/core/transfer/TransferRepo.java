@@ -25,4 +25,8 @@ public class TransferRepo {
     public boolean hasNonce(String nonce) {
         return dataStore.values().stream().anyMatch(t -> Objects.equals(t.getNonce(), nonce));
     }
+
+    public boolean isConnected() {
+        return true;
+    }
 }
